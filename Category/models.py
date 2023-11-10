@@ -6,7 +6,7 @@ from .managers import CategoryQueryset
 
 class Category(MP_Node):
     title = models.CharField(_('عنوان'), max_length=255, db_index=True)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, all_unicode=True)
     is_public = models.BooleanField(default=True)
 
     objects = CategoryQueryset.as_manager()

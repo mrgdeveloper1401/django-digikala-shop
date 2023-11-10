@@ -5,6 +5,7 @@ from django.db.models.query import QuerySet
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from django_jalali.admin.filters import JDateFieldListFilter
+from django.http import HttpResponse
 from . import models
 
 
@@ -52,6 +53,10 @@ class UsersAdmin(UserAdmin):
     
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         return models.User.objects.filter(is_deleted=False)
+
+    # def save_model(self, request: Any, obj: Any, form: Any, change: Any) -> None:
+    #     if obj.id == request.user.id:
+    #         super().save_model(request, obj, form, change)
 
 
 @admin.register(models.RecycleUser)

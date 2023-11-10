@@ -19,13 +19,14 @@ Common = [
 CREATE_APP = [
     'accounts.apps.AccountsConfig',
     'Category.apps.CategoryConfig',
-    'treebeard',
+    'products.apps.ProductsConfig',
 ]
 
 REST_FRAMEWORK = [
     'rest_framework_simplejwt',
     'rest_framework',
     'drf_spectacular',
+    'treebeard',
 ]
 
 INSTALLED_APPS = [
@@ -116,3 +117,4 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
 }
+
