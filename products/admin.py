@@ -1,32 +1,50 @@
 from typing import Any
 from django.contrib import admin
-from .models import ProductModel, 
+from django.db.models.query import QuerySet
+from . import models
 from django_jalali.admin.filters import JDateFieldListFilter
 
 
+class ProductOptionInline(admin.TabularInline):
+    model = models.ProductAttribute
+    extra = 1
 
-@admin.register(ProductModel)
+
+@admin.register(models.ProductModel)
 class productAdmin(admin.ModelAdmin):
-    list_display = ('en_name', 'fa_name', 'price', 'is_public', 'id')
+    list_display = ('title', 'track_stock', 'require_shipping', 'option_product', 'number_of_attribute')
+    search_fields = ('title', )
     list_filter = (
-        ('create_product', JDateFieldListFilter),
-        ('update_product', JDateFieldListFilter),
-        'is_public',
-        'is_available',
-        'in_stock',
+        'track_stock',
+        'require_shipping',
     )
-    list_editable = ('is_public', )
-    list_per_page = 100
-    # inlines = (ProductColorModel,)
-    date_hierarchy = 'create_product'
-    prepopulated_fields = {
-        'slug': ('description',)
-    }
-    search_fields = ('en_name', )
-    readonly_fields = ('create_product', 'update_product')
-    show_full_result_count = True
-    ordering = ('-create_product',)
+    inlines = (ProductOptionInline, )
+    prepopulated_fields = {'slug': ('title',)}
+    actions = ('disable_track_stock',
+                'enable_track_stock',
+                'enable_require_shipping',
+                'disable_require_shipping')
     
-    def tick_is_publicc(self, obj):
-        return obj.is_public.bool
+    def option_product(self, obj):
+        return ','.join([name.title for name in obj.option.all()])
     
+    def number_of_attribute(self, obj):
+        return obj.product_attr.count()
+    
+    def disable_track_stock(self, request, queryset):
+        queryset.update(track_stock=False)
+        
+    def enable_track_stock(self, request, queryset):
+        queryset.update(track_stock=True)
+        
+    def enable_require_shipping(self, request, queryset):
+        queryset.update(require_shipping=True)
+        
+    def disable_require_shipping(self, request, queryset):
+        queryset.update(require_shipping=False)
+    
+
+admin.site.register(models.OptionGroup)
+admin.site.register(models.OptionGroupValue)
+admin.site.register(models.ProductAttribute)
+admin.site.register(models.Option)
