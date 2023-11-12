@@ -2,7 +2,7 @@ from typing import Any
 from django.db import models
 
 
-class UpperField(models.CharField):
+class UpperCharField(models.CharField):
     
     def from_db_value(self, value, *args, **kwargs):
         return self.to_python(value, *args, **kwargs)
