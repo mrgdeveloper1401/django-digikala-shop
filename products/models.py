@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_jalali.db import models as jmodels
+from common.fields import UpperField
 
 
 class OptionGroup(models.Model):
@@ -39,7 +40,34 @@ class ProductModel(models.Model):
         blank=True,
         related_name='product_options',
     )
-
+    class ProductTypeChoose(models.TextChoices):
+        stadoalone = 'stadoalone'
+        parent = 'parent'
+        child = 'child'
+        
+    structer = models.CharField(
+        max_length=10,
+        choices=ProductTypeChoose.choices,
+        default=ProductTypeChoose.stadoalone
+    )
+    parent = models.ForeignKey('self', null=True, blank=True,
+                               related_name='children',
+                               on_delete=models.CASCADE)
+    upc = UpperField(
+        max_length=24,
+        unique=True,
+        null=True,
+        blank=True
+    )
+    meta_title = models.CharField(
+        max_length=128,
+        null=True,
+        blank=True
+    )
+    meta_description = models.TextField(
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return self.title
