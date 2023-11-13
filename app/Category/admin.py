@@ -12,4 +12,3 @@ class CategoryAdmin(TreeAdmin):
     }
     list_display = ('title', 'id')
     search_fields = ('title', )
-    

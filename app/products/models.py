@@ -17,16 +17,38 @@ class Option(CreateModel):
         db_table = 'option'
         
 
+class OptionValueModel(models.Model):
+    title = models.CharField(_('عنوان'), max_length=50, db_index=True)
+    body_option_value = models.CharField(_("متن عنوان"), max_length=100)
+    
+    def __str__(self) -> str:
+        return self.title
+    
+    class Meta:
+        verbose_name = _('option value')
+        verbose_name_plural = _('option values')
+        db_table = 'option_value'
+        
+
 class ProductModel(CreateModel, UpdateModel):
     category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='categories')
-    title_product = models.CharField(_('نام یا عنوان محصول'), max_length=150, db_index=True)
+    title_product = models.OneToOneField('SallerModel', on_delete=models.PROTECT, related_name='title_products')
     description_product = models.TextField(blank=True, null=True)
-    barcode = models.BigIntegerField(_('بارکد کالا'))
+    barcode = models.PositiveBigIntegerField(_('بارکد کالا'))
     product_auth_code = models.CharField(_('کد شناسایی هر کالا'), max_length=128, unique=True)
     option = models.ManyToManyField(Option, related_name='options',)
     saller = models.ForeignKey('SallerModel', on_delete=models.PROTECT, related_name='sallers')
+    image = models.ManyToManyField('images.ImagesModel', related_name='product_images')
 
+    def __str__(self) -> str:
+        return self.title_product.product_name
 
+    class Meta:
+        verbose_name = _('product')
+        verbose_name_plural = _('products')
+        db_table = 'product'
+        
+        
 class SallerModel(CreateModel, UpdateModel):
     user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='users')
     product_name = models.CharField(_('نام کالا'), max_length=150, db_index=True)
@@ -43,6 +65,14 @@ class SallerModel(CreateModel, UpdateModel):
     is_delivery = models.BooleanField(_("ارسال از طریق پست"), default=True)
     option = models.ManyToManyField('products.Option', related_name='saller_options')
 
+    class PerformanceChoose(models.TextChoices):
+        very_bad = 'very bad', _('very bad')
+        bad = 'bad', _('bad')
+        normall = 'normall', _('normall')
+        best = 'best', _('best')
+        very_best = 'very best', _('very best')
+    performance_product = models.CharField(_('عملکرد کالا'), choices=PerformanceChoose.choices, default=PerformanceChoose.very_best, max_length=9)
+    
     def __str__(self) -> str:
         return self.product_name
 
