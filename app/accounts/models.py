@@ -27,6 +27,8 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
     objects = manager.UserManager()
 
     class Meta:
+        verbose_name = _('کاربر')
+        verbose_name_plural = _('کاربران')
         db_table = 'user'
 
 class JobUserModel(CreateModel, UpdateModel):
@@ -43,11 +45,11 @@ class JobUserModel(CreateModel, UpdateModel):
         programming = 'Programming'
         sales_marketing = 'Sales & Marketing'
 
-    job = models.CharField(_('شغل'), max_length=15, choices=JobChoose.choices, default=None)
+    job = models.CharField(_('شغل'), max_length=17, choices=JobChoose.choices, default=None)
 
     class Meta:
-        verbose_name = _('Job')
-        verbose_name_plural = _('jobs')
+        verbose_name = _('شغل')
+        verbose_name_plural = _('شغل ها')
         db_table = 'job'
 
 

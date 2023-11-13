@@ -6,7 +6,7 @@ from .managers import CategoryQueryset
 
 class Category(MP_Node):
     title = models.CharField(_('عنوان'), max_length=255, db_index=True)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, allow_unicode=True)
     is_public = models.BooleanField(default=True)
 
     objects = CategoryQueryset.as_manager()
@@ -15,8 +15,8 @@ class Category(MP_Node):
         return self.title
     
     class Meta:
-        verbose_name = _('Category')
-        verbose_name_plural = _('Categories')
+        verbose_name = _('دسته بندی')
+        verbose_name_plural = _('دسته بندی ها')
         db_table = 'category'
 
     

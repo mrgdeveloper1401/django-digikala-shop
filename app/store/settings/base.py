@@ -20,6 +20,9 @@ CREATE_APP = [
     'accounts.apps.AccountsConfig',
     'Category.apps.CategoryConfig',
     'products.apps.ProductsConfig',
+    'orders.apps.OrdersConfig',
+    'images.apps.ImagesConfig',
+    
 ]
 
 REST_FRAMEWORK = [
