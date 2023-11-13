@@ -102,6 +102,8 @@ class Product(models.Model):
     is_public = models.BooleanField(default=True)
     meta_title = models.CharField(max_length=128, null=True, blank=True)
     meta_description = models.TextField(null=True, blank=True)
+    product_class = models.ForeignKey(on_delete=models.PROTECT, null=True, blank=True,related_name='products')
+    attribute = models.ManyToManyField(ProductAttribute)
 
     slug = models.SlugField(unique=True, allow_unicode=True)
     class Meta:
