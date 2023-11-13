@@ -1,0 +1,39 @@
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=django_shop
+      - POSTGRES_USER=django_shop
+      - POSTGRES_PASSWORD='django_shop.123456'
+    volumes:
+      - postgres:/var/lib/postgres/data
+
+  app:
+    build:
+      context: .
+    container_name: shop
+    command: >
+      "python manage.py migrate &&
+      python manage.py collectstatic --no-input --clear &&
+      gunicorn app.store.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - static:/src/static
+      - media:/src/media
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - DEBUG=FALSE
+      - ALLOWED-HOST=*
+      - DATABASE-NAME=django_shop
+      - DATABASE-USER=django_shop
+      - DATABASE-PASSWORD=djngo_shop.123456
+      - DATABASE-PORT=5432
+      - DATABASE-HOST=database
+    
+volumes:
+  static:
+  media:
+  postgres:
