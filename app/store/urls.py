@@ -29,12 +29,14 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 # admin rest 
 admin_urls = [
     # Category Admin
+    path('accounts/admin/', include('accounts.admins.urls', namespace='account_admin')),
     path('Category/admin/', include('Category.admins.urls', namespace='category_admin')),
 ]
 # client rest
 client_urls = [
     # Category client
     path('category/client/', include('Category.client.urls', namespace='category_client')),
+    path('accounts/add/', include('accounts.clients.urls', namespace='account_client')),
 
 ]
 # swagger doc
@@ -55,8 +57,6 @@ jwt_token = [
 urlpatterns = [
     # admin pannel
     path('store/', admin.site.urls),
-    # api accounts
-    path('user/', include('accounts.urls', namespace='user')),
 
 ] + client_urls + jwt_token + open_api_doc + admin_urls
 if settings.DEBUG:

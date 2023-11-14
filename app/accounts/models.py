@@ -5,6 +5,7 @@ from django_jalali.db import models as jmodels
 from django.db.models import Manager
 from . import manager
 from common.models import SoftDelete, CreateModel, UpdateModel
+from django.utils import timezone
 
 
 class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateModel):
@@ -18,7 +19,7 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
     update_information = jmodels.jDateTimeField(_('update user'), auto_now=True)
     is_verified_email = models.BooleanField(_('تایید ایمیل'), default=False)
     is_verified_mmobile_phone = models.BooleanField(_('تایید شماره همراه'), default=False)
-    last_login = jmodels.jDateTimeField(_('تاریخ اخرین ورود'), blank=True, null=True, editable=False)
+    last_login = jmodels.jDateTimeField(_('تاریخ اخرین ورود'), blank=True, null=True, default=timezone.now())
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
@@ -46,7 +47,7 @@ class JobUserModel(CreateModel, UpdateModel):
         sales_marketing = 'Sales & Marketing'
 
     job = models.CharField(_('شغل'), max_length=17, choices=JobChoose.choices, default=None)
-
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='job')
     class Meta:
         verbose_name = _('شغل')
         verbose_name_plural = _('شغل ها')
