@@ -34,8 +34,8 @@ class SoftDelete(models.Model):
 # create model
 class CreateModel(models.Model):
     created_at = jmodels.jDateTimeField(_('تاریخ ایجاد'), auto_now_add=True, editable=False)
-    create_by = models.ForeignKey('accounts.User', on_delete=models.CASCADE, blank=True, null=True,
-                                  verbose_name='توسط کاربر ایجاد شده')
+    # create_by = models.ForeignKey('accounts.User', on_delete=models.CASCADE, blank=True, null=True,
+    #                               verbose_name='توسط کاربر ایجاد شده')
     
 
     class Meta:

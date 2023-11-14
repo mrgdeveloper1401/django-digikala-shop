@@ -21,6 +21,11 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
     is_verified_mmobile_phone = models.BooleanField(_('تایید شماره همراه'), default=False)
     last_login = jmodels.jDateTimeField(_('تاریخ اخرین ورود'), blank=True, null=True, default=timezone.now())
 
+    class GenderChoose(models.TextChoices):
+        female = 'female', _("Female")
+        male = 'male', _("Male")
+    gender = models.CharField(_('جنسیت'), max_length=6, choices=GenderChoose.choices, default=GenderChoose.male, blank=True)
+    
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('first_name', 'last_name', 'mobile_phone')
