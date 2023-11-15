@@ -31,6 +31,7 @@ admin_urls = [
     # Category Admin
     path('accounts/admin/', include('accounts.admins.urls', namespace='account_admin')),
     path('Category/admin/', include('Category.admins.urls', namespace='category_admin')),
+    path('products/admin/user/', include('products.admins.urls', namespace='products_admin_user')),
 ]
 # client rest
 client_urls = [
