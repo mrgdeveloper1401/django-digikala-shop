@@ -30,16 +30,25 @@ class OptionValueModel(models.Model):
         db_table = 'option_value'
         
 
-class ProductModel(CreateModel, UpdateModel):
-    category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='categories')
-    title_product = models.OneToOneField('SallerModel', on_delete=models.PROTECT, related_name='title_products')
+class ProductModel(CreateModel):
+    category = models.OneToOneField('Category.Category', on_delete=models.PROTECT, related_name='categories')
+    product_name = models.CharField(_('نام کالا'), max_length=150, db_index=True)
+    price = models.PositiveIntegerField(_('قیمت'), db_index=True)
     description_product = models.TextField(blank=True, null=True)
     barcode = models.PositiveBigIntegerField(_('بارکد کالا'))
     product_auth_code = models.CharField(_('کد شناسایی هر کالا'), max_length=128, unique=True)
     option = models.ManyToManyField(Option, related_name='options',)
     saller = models.ForeignKey('SallerModel', on_delete=models.PROTECT, related_name='sallers')
     image = models.ManyToManyField('images.ImagesModel', related_name='product_images')
-
+    is_stock = models.BooleanField(_("موجود هست"), default=True)
+    number_product = models.PositiveSmallIntegerField(_("تعداد محصول"))
+    is_delivery = models.BooleanField(_("ارسال از طریق پست"), default=True)
+    
+    class Warrentychoose(models.TextChoices):
+        no_warrenty = 'no warrenty', _('no warrenty')
+        company_warrenty = 'company warrenty', _('company warrenty')
+    warrenty_choose = models.CharField(_('نوع گارانتی'), max_length=16, choices=Warrentychoose.choices, default=Warrentychoose.no_warrenty)
+    
     def __str__(self) -> str:
         return self.title_product.product_name
 
@@ -51,30 +60,17 @@ class ProductModel(CreateModel, UpdateModel):
         
 class SallerModel(CreateModel, UpdateModel):
     user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='users')
-    product_name = models.CharField(_('نام کالا'), max_length=150, db_index=True)
-    price = models.PositiveIntegerField(_('قیمت'), db_index=True)
+    company_name = models.CharField(_('اسم تولیدی'), max_length=50)
+    province_name = models.CharField(_('استان'), max_length=50)
+    eprachy_name = models.CharField(_('شهرستان'), max_length=50)
+    city = models.CharField(_('شهر'), max_length=50)
+    address = models.TextField(_('ادرس'))
+    postacl_code = models.CharField(_('کد پستی'), max_length=11, unique=True)
+    nation_code = models.CharField(_('کد ملی'), max_length=11, unique=True)
     
-    class Warrentychoose(models.TextChoices):
-        no_warrenty = 'no warrenty', _('no warrenty')
-        company_warrenty = 'company warrenty', _('company warrenty')
-        
-    warrenty_choose = models.CharField(_('نوع گارانتی'), max_length=16, choices=Warrentychoose.choices, default=Warrentychoose.no_warrenty)
-    is_stock = models.BooleanField(_("موجود هست"), default=True)
-    number_product = models.PositiveSmallIntegerField(_("تعداد محصول"))
-    image = models.ForeignKey('images.ImagesModel', related_name='images', on_delete=models.PROTECT)
-    is_delivery = models.BooleanField(_("ارسال از طریق پست"), default=True)
-    option = models.ManyToManyField('products.Option', related_name='saller_options')
-
-    class PerformanceChoose(models.TextChoices):
-        very_bad = 'very bad', _('very bad')
-        bad = 'bad', _('bad')
-        normall = 'normall', _('normall')
-        best = 'best', _('best')
-        very_best = 'very best', _('very best')
-    performance_product = models.CharField(_('عملکرد کالا'), choices=PerformanceChoose.choices, default=PerformanceChoose.very_best, max_length=9)
     
     def __str__(self) -> str:
-        return self.product_name
+        return self.company_name
 
     class Meta:
         verbose_name = _('saller')

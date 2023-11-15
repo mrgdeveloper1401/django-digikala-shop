@@ -1,3 +1,6 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+from common.models import CreateModel
+from products.models import ProductModel
 
-# Create your models here.
+    
