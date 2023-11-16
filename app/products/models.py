@@ -17,17 +17,28 @@ class Option(CreateModel):
         db_table = 'option'
         
 
-class OptionValueModel(models.Model):
-    title = models.CharField(_('عنوان'), max_length=50, db_index=True)
-    body_option_value = models.CharField(_("متن عنوان"), max_length=100)
+class ProductAttributeModel(models.Model):
+    title = models.CharField(_('عنوان ویژگی'), max_length=50, db_index=True)
     
     def __str__(self) -> str:
         return self.title
     
     class Meta:
-        verbose_name = _('option value')
-        verbose_name_plural = _('option values')
-        db_table = 'option_value'
+        verbose_name = _('product attribute')
+        verbose_name_plural = _('product attrobutes')
+        db_table = 'product_attribute'
+        
+
+class ProductAttributeValueModel(models.Model):
+    title = models.CharField(_('ویژگی'), max_length=50, blank=True)
+    
+    def __str__(self) -> str:
+        return self.title
+    
+    class Meta:
+        verbose_name = _('product attribute value')
+        verbose_name_plural = _('product attribute values')
+        db_table = 'product_attribute_value'
         
 
 class ProductModel(CreateModel):
@@ -36,9 +47,7 @@ class ProductModel(CreateModel):
     price = models.PositiveIntegerField(_('قیمت'), db_index=True)
     description_product = models.TextField(blank=True, null=True)
     barcode = models.PositiveBigIntegerField(_('بارکد کالا'), blank=True)
-    product_auth_code = models.CharField(_('کد شناسایی هر کالا'), max_length=128, unique=True)
-    option = models.ManyToManyField(Option, related_name='options',)
-    saller = models.OneToOneField('SallerModel', on_delete=models.PROTECT, related_name='sallers')
+    product_auth_code = models.CharField(_('کد شناسایی هر کالا'), max_length=128, unique=True)    saller = models.OneToOneField('SallerModel', on_delete=models.PROTECT, related_name='sallers')
     image = models.ForeignKey('images.ImagesModel', on_delete=models.PROTECT, related_name='product_images')
     is_stock = models.BooleanField(_("موجود هست"), default=True)
     number_product = models.PositiveSmallIntegerField(_("تعداد محصول"))
