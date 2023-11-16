@@ -16,7 +16,6 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
     birth_day = jmodels.jDateTimeField(_('تاریخ تولد'), blank=True, null=True)
     is_staff = models.BooleanField(_('کارمند'), default=False)
     is_active = models.BooleanField(_('فعال'), default=True)
-    update_information = jmodels.jDateTimeField(_('update user'), auto_now=True)
     is_verified_email = models.BooleanField(_('تایید ایمیل'), default=False)
     is_verified_mmobile_phone = models.BooleanField(_('تایید شماره همراه'), default=False)
     last_login = jmodels.jDateTimeField(_('تاریخ اخرین ورود'), blank=True, null=True, default=timezone.now())
