@@ -13,7 +13,7 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
     mobile_phone = models.CharField(_('شماره همراه'), unique=True,max_length=11)
     first_name = models.CharField(_('نام'), max_length=100)
     last_name = models.CharField(_('خانوادگی'), max_length=100)
-    birth_day = jmodels.jDateTimeField(_('تاریخ تولد'), blank=True, null=True)
+    birth_day = jmodels.jDateField(_('تاریخ تولد'), blank=True, null=True)
     is_staff = models.BooleanField(_('کارمند'), default=False)
     is_active = models.BooleanField(_('فعال'), default=True)
     is_verified_email = models.BooleanField(_('تایید ایمیل'), default=False)

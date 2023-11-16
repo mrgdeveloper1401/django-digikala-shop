@@ -15,7 +15,7 @@ class UsersAdmin(UserAdmin):
     change_user_password_template = None
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("first_name", "last_name", "mobile_phone",)}),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "mobile_phone", 'birth_day', 'gender')}),
         (
             _("Permissions"),
             {
@@ -23,13 +23,15 @@ class UsersAdmin(UserAdmin):
                     "is_active",
                     "is_staff",
                     "is_superuser",
+                    'is_deleted',
                     "groups",
                     "user_permissions",
+
                 ),
             },
         ),
-        (_("Important dates"), {"fields": ("last_login",
-                                           'update_information')}),
+        ('accept account', {'fields': ('is_verified_email', 'is_verified_mmobile_phone',)}),
+        (_("Important dates"), {"fields": ("last_login", 'update_at', 'deleted_at',)}),
     )
     add_fieldsets = (
         (
@@ -49,7 +51,7 @@ class UsersAdmin(UserAdmin):
         "user_permissions",
     )
     list_display_links = ('mobile_phone', 'email')
-    readonly_fields = ('update_information',)
+    readonly_fields = ('update_at', 'is_deleted', 'deleted_at',)
     
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         return models.User.objects.filter(is_deleted=False)
