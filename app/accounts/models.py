@@ -29,6 +29,9 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('first_name', 'last_name', 'mobile_phone')
 
+    def __str__(self) -> str:
+        return self.email
+    
     objects = manager.UserManager()
 
     class Meta:
@@ -52,6 +55,10 @@ class JobUserModel(CreateModel, UpdateModel):
 
     job = models.CharField(_('شغل'), max_length=17, choices=JobChoose.choices, default=None)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='job')
+    
+    def __str__(self) -> str:
+        return f'{self.user.email} -- {self.job}'
+    
     class Meta:
         verbose_name = _('شغل')
         verbose_name_plural = _('شغل ها')

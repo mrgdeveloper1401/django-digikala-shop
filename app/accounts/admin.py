@@ -42,7 +42,7 @@ class UsersAdmin(UserAdmin):
             },
         ),
     )
-    list_display = ("mobile_phone", "email", "first_name", "last_name",)
+    list_display = ("mobile_phone", "email", "first_name", "last_name", 'id')
     list_filter = ("is_staff", "is_superuser", "is_active", "groups")
     search_fields = ("mobile_phone", "first_name", "last_name", "email")
     ordering = ("email",)
@@ -70,3 +70,10 @@ class RecycleAdmin(admin.ModelAdmin):
     @admin.action(description='recovery user')
     def recover(self, request: HttpRequest, queryset: QuerySet[Any]):
         queryset.update(is_deleted=False, deleted_at=None)
+        
+
+@admin.register(models.JobUserModel)
+class JobAdmin(admin.ModelAdmin):
+    list_display = ('job', 'user', 'id')
+    search_fields = ('job', )
+    list_filter =('created_at', 'update_at')
