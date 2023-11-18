@@ -14,3 +14,8 @@ class OptionAdmin(admin.ModelAdmin):
 @admin.register(models.SallerModel)
 class SallerAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(models.ProductLine)
+class ProductLineAdmin(admin.ModelAdmin):
+    pass
