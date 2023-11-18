@@ -46,6 +46,8 @@ class ProductLine(models.Model):
     sku = models.CharField(_('بارکد اختصاصی انبارداری'), max_length=50, unique=True)
     price = models.DecimalField(_('قیمت کالا'), decimal_places=3, max_digits=12)
     is_stock = models.BooleanField(_("موجود هست"), default=True)
+    is_delivery = models.BooleanField(_("ارسال از طریق پست"), default=True)
+    number_product = models.PositiveSmallIntegerField(_("تعداد محصول"))
 
     def __str__(self) -> str:
         return self.upc
@@ -55,17 +57,16 @@ class ProductLine(models.Model):
         verbose_name_plural = _('جزییات محصولات')
         db_table = 'product_line'
 
-        
+
 class ProductModel(CreateModel):
     category = models.OneToOneField('Category.Category', on_delete=models.PROTECT, related_name='categories')
     product_name = models.CharField(_('نام کالا'), max_length=150, db_index=True)
     description_product = models.TextField(blank=True, null=True)
-    product_auth_code = models.CharField(_('کد شناسایی هر کالا'), max_length=128, unique=True)
     saller = models.OneToOneField('SallerModel', on_delete=models.PROTECT, related_name='sallers')
     image = models.ForeignKey('images.ImagesModel', on_delete=models.PROTECT, related_name='product_images')
-    number_product = models.PositiveSmallIntegerField(_("تعداد محصول"))
-    is_delivery = models.BooleanField(_("ارسال از طریق پست"), default=True)
-    
+    product_line = models.ForeignKey(ProductLine, on_delete=models.PROTECT, related_name='productlines')
+
+
     class Warrentychoose(models.TextChoices):
         no_warrenty = 'no warrenty', _('no warrenty')
         company_warrenty = 'company warrenty', _('company warrenty')
