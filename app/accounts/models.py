@@ -13,10 +13,9 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
     mobile_phone = models.CharField(_('شماره همراه'), unique=True,max_length=11)
     first_name = models.CharField(_('نام'), max_length=100)
     last_name = models.CharField(_('خانوادگی'), max_length=100)
-    birth_day = jmodels.jDateTimeField(_('تاریخ تولد'), blank=True, null=True)
+    birth_day = jmodels.jDateField(_('تاریخ تولد'), blank=True, null=True)
     is_staff = models.BooleanField(_('کارمند'), default=False)
     is_active = models.BooleanField(_('فعال'), default=True)
-    update_information = jmodels.jDateTimeField(_('update user'), auto_now=True)
     is_verified_email = models.BooleanField(_('تایید ایمیل'), default=False)
     is_verified_mmobile_phone = models.BooleanField(_('تایید شماره همراه'), default=False)
     last_login = jmodels.jDateTimeField(_('تاریخ اخرین ورود'), blank=True, null=True, default=timezone.now())
@@ -30,6 +29,9 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('first_name', 'last_name', 'mobile_phone')
 
+    def __str__(self) -> str:
+        return self.email
+    
     objects = manager.UserManager()
 
     class Meta:
@@ -53,6 +55,10 @@ class JobUserModel(CreateModel, UpdateModel):
 
     job = models.CharField(_('شغل'), max_length=17, choices=JobChoose.choices, default=None)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='job')
+    
+    def __str__(self) -> str:
+        return f'{self.user.email} -- {self.job}'
+    
     class Meta:
         verbose_name = _('شغل')
         verbose_name_plural = _('شغل ها')

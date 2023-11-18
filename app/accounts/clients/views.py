@@ -7,6 +7,7 @@ from .serialziers import UserSerialziers, profileSerializers, JobSerializers
 from django.core import mail
 from accounts.models import User, JobUserModel
 from accounts.base_permission import IsOwner
+from rest_framework.permissions import IsAuthenticated
 
 
 class UserCreateApiView(CreateAPIView):
@@ -20,20 +21,8 @@ class ProfileView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsOwner,)
     
 
-class JobView(viewsets.ViewSet):
+class JobView(viewsets.ModelViewSet):
+    queryset = JobUserModel.objects.all()
+    serializer_class = JobSerializers
     permission_classes = (IsOwner, )
     
-    def create(self, request):
-        ser_data = JobSerializers(data=request.data)
-        if ser_data.is_valid():
-            ser_data.save()
-            return Response(ser_data.data, status=status.HTTP_201_CREATED)
-        return Response(ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def update(self, request, pk=None):
-        job = get_object_or_404(JobUserModel, pk=pk)
-        ser_data = JobSerializers(job, data=request.data)
-        if ser_data.is_valid():
-            ser_data.save()
-            return Response(ser_data.data, status=status.HTTP_201_CREATED)
-        return Response(ser_data.errors, status=status.HTTP_400_BAD_REQUEST)

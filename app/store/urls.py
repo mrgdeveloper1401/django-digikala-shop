@@ -28,16 +28,19 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 
 # admin rest 
 admin_urls = [
-    # Category Admin
+    # accounts Admin
     path('accounts/admin/', include('accounts.admins.urls', namespace='account_admin')),
+    # category admin
     path('Category/admin/', include('Category.admins.urls', namespace='category_admin')),
+    # product admin
     path('products/admin/user/', include('products.admins.urls', namespace='products_admin_user')),
 ]
 # client rest
 client_urls = [
     # Category client
     path('category/client/', include('Category.client.urls', namespace='category_client')),
-    path('accounts/add/', include('accounts.clients.urls', namespace='account_client')),
+    # accounts client
+    path('accounts/', include('accounts.clients.urls', namespace='account_client')),
 
 ]
 # swagger doc

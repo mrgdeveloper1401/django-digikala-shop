@@ -38,11 +38,14 @@ class JobSerializers(serializers.ModelSerializer):
     
     def create(self, validated_data):
         return JobUserModel.objects.create(**validated_data)
+    
 
 class profileSerializers(serializers.ModelSerializer):
+    job = JobSerializers()
     class Meta:
         model = User
         fields = (
+            'job',
             'email',
             'first_name',
             'last_name',
