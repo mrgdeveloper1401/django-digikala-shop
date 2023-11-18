@@ -22,6 +22,7 @@ CREATE_APP = [
     'products.apps.ProductsConfig',
     'orders.apps.OrdersConfig',
     'images.apps.ImagesConfig',
+    'question.apps.QuestionConfig',
     
 ]
 

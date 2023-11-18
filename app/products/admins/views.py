@@ -7,6 +7,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = ProductModel.objects.all()
     serializer_class = serialziers.CreateProductSerializer
     # permission_classes = ('', )
+    
 
 class SallerProductViewSet(viewsets.ModelViewSet):
     queryset = ProductModel.objects.all()

@@ -29,7 +29,7 @@ class QuestionModel(CreateModel):
 
 class AnswerProduct(CreateModel):
     user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='user_answers')
-    question = models.ForeignKey('products.QuestionModel', on_delete=models.PROTECT, related_name='question_answers')
+    question = models.ForeignKey('products.ProductModel', on_delete=models.PROTECT, related_name='question_answers')
     product = models.ForeignKey('products.ProductModel', on_delete=models.PROTECT, related_name='product_answers')
     answer_body = models.TextField(_('متن پاسخ'), max_length=500)
     

@@ -48,6 +48,7 @@ class ProductLine(models.Model):
     is_stock = models.BooleanField(_("موجود هست"), default=True)
     is_delivery = models.BooleanField(_("ارسال از طریق پست"), default=True)
     number_product = models.PositiveSmallIntegerField(_("تعداد محصول"))
+    is_active = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.upc
@@ -65,7 +66,7 @@ class ProductModel(CreateModel):
     saller = models.OneToOneField('SallerModel', on_delete=models.PROTECT, related_name='sallers')
     image = models.ForeignKey('images.ImagesModel', on_delete=models.PROTECT, related_name='product_images')
     product_line = models.ForeignKey(ProductLine, on_delete=models.PROTECT, related_name='productlines')
-
+    is_active = models.BooleanField(default=False)
 
     class Warrentychoose(models.TextChoices):
         no_warrenty = 'no warrenty', _('no warrenty')
