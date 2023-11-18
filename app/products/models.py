@@ -49,6 +49,7 @@ class ProductLine(models.Model):
     is_delivery = models.BooleanField(_("ارسال از طریق پست"), default=True)
     number_product = models.PositiveSmallIntegerField(_("تعداد محصول"))
     is_active = models.BooleanField(default=False)
+    product_line = models.ForeignKey('ProductModel', on_delete=models.PROTECT, related_name='product_lines')
 
     def __str__(self) -> str:
         return self.upc
@@ -63,9 +64,7 @@ class ProductModel(CreateModel):
     category = models.OneToOneField('Category.Category', on_delete=models.PROTECT, related_name='categories')
     product_name = models.CharField(_('نام کالا'), max_length=150, db_index=True)
     description_product = models.TextField(blank=True, null=True)
-    saller = models.OneToOneField('SallerModel', on_delete=models.PROTECT, related_name='sallers')
     image = models.ForeignKey('images.ImagesModel', on_delete=models.PROTECT, related_name='product_images')
-    product_line = models.ForeignKey(ProductLine, on_delete=models.PROTECT, related_name='productlines')
     is_active = models.BooleanField(default=False)
 
     class Warrentychoose(models.TextChoices):
@@ -82,7 +81,7 @@ class ProductModel(CreateModel):
         verbose_name_plural = _('products')
         db_table = 'product'
         
-        
+
 class SallerModel(CreateModel, UpdateModel):
     user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='users')
     company_name = models.CharField(_('اسم تولیدی'), max_length=50)
@@ -92,7 +91,8 @@ class SallerModel(CreateModel, UpdateModel):
     address = models.TextField(_('ادرس'))
     postacl_code = models.CharField(_('کد پستی'), max_length=11, unique=True)
     nation_code = models.CharField(_('کد ملی'), max_length=11, unique=True)
-    
+    saller = models.ForeignKey(ProductModel, on_delete=models.PROTECT, related_name='sallers')
+
     
     def __str__(self) -> str:
         return self.company_name
