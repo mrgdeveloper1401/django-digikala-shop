@@ -5,11 +5,10 @@ from django.db.models.query import QuerySet
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from django_jalali.admin.filters import JDateFieldListFilter
-from django.http import HttpResponse
-from . import models
+from .models import User, JobUserModel, RecycleUser
 
 
-@admin.register(models.User)
+@admin.register(User)
 class UsersAdmin(UserAdmin):
     add_form_template = "admin/auth/user/add_form.html"
     change_user_password_template = None
@@ -31,7 +30,7 @@ class UsersAdmin(UserAdmin):
             },
         ),
         ('accept account', {'fields': ('is_verified_email', 'is_verified_mmobile_phone',)}),
-        (_("Important dates"), {"fields": ("last_login", 'update_at', 'deleted_at',)}),
+        (_("Important dates"), {"fields": ("last_login", 'updated_at', 'deleted_at',)}),
     )
     add_fieldsets = (
         (
@@ -42,8 +41,9 @@ class UsersAdmin(UserAdmin):
             },
         ),
     )
-    list_display = ("mobile_phone", "email", "first_name", "last_name", 'id')
-    list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+    list_display = ("mobile_phone", "email", "first_name", "last_name", 'created_at', 'updated_at')
+    list_filter = ("is_staff", "is_superuser", "is_active", ("created_at", JDateFieldListFilter), 
+                   ('updated_at', JDateFieldListFilter))
     search_fields = ("mobile_phone", "first_name", "last_name", "email")
     ordering = ("email",)
     filter_horizontal = (
@@ -51,29 +51,28 @@ class UsersAdmin(UserAdmin):
         "user_permissions",
     )
     list_display_links = ('mobile_phone', 'email')
-    readonly_fields = ('update_at', 'is_deleted', 'deleted_at',)
+    readonly_fields = ('updated_at', 'is_deleted', 'deleted_at',)
+    list_per_page = 20
     
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
-        return models.User.objects.filter(is_deleted=False)
-
-    # def save_model(self, request: Any, obj: Any, form: Any, change: Any) -> None:
-    #     if obj.id == request.user.id:
-    #         super().save_model(request, obj, form, change)
+        return User.objects.filter(is_deleted=False)
 
 
-@admin.register(models.RecycleUser)
+@admin.register(RecycleUser)
 class RecycleAdmin(admin.ModelAdmin):
-    actions = ('recover',)
+    actions = ('recover user',)
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
-        return models.RecycleUser.deleted.filter(is_deleted=True)
+        return RecycleUser.deleted.filter(is_deleted=True)
     
     @admin.action(description='recovery user')
     def recover(self, request: HttpRequest, queryset: QuerySet[Any]):
         queryset.update(is_deleted=False, deleted_at=None)
         
 
-@admin.register(models.JobUserModel)
+@admin.register(JobUserModel)
 class JobAdmin(admin.ModelAdmin):
     list_display = ('job', 'user', 'id')
     search_fields = ('job', )
-    list_filter =('created_at', 'update_at')
+    list_filter =(('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
+    raw_id_fields = ('user',)
+    list_display_links =('job', 'user')

@@ -43,7 +43,7 @@ class CreateModel(models.Model):
         
 
 class UpdateModel(models.Model):
-    update_at = jmodels.jDateTimeField(_('تاریخ بروزرسانی'), auto_now=True, editable=False, blank=True, null=True)
+    updated_at = jmodels.jDateTimeField(_('تاریخ بروزرسانی'), auto_now=True, editable=False, blank=True, null=True)
 
 
     class Meta:

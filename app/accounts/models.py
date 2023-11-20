@@ -21,8 +21,8 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
     last_login = jmodels.jDateTimeField(_('تاریخ اخرین ورود'), blank=True, null=True, default=timezone.now())
 
     class GenderChoose(models.TextChoices):
-        female = 'female', _("Female")
-        male = 'male', _("Male")
+        female = 'female', _("زن")
+        male = 'male', _("مرد")
     gender = models.CharField(_('جنسیت'), max_length=6, choices=GenderChoose.choices, default=GenderChoose.male, blank=True)
     
     EMAIL_FIELD = 'email'
@@ -41,19 +41,17 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
 
 class JobUserModel(CreateModel, UpdateModel):
     class JobChoose(models.TextChoices):
-        sportman = 'sportman'
-        historiology = 'historiology'
-        socialـSciences = 'social Sciences'
-        reporter = 'Reporter'
-        lawyer = 'Lawyer'
-        engineering  = 'Engineering'
-        graphics = 'Graphics'
-        marketing ='marketing'
-        transportation = 'Transportation'
-        programming = 'Programming'
-        sales_marketing = 'Sales & Marketing'
-
-    job = models.CharField(_('شغل'), max_length=17, choices=JobChoose.choices, default=None)
+        IT = 'IT', _("فناوری و اطلاعات")
+        FINANCIAL_ACCOUNTING = 'financial accounting', _('مالی و حسابداری')
+        SALE_MARKETING = 'sale marketing', _('مالی و حسابداری')
+        HEALTH_MEDICINE = 'health medical', _('سلامت و پزشکی')
+        EDUCATION_TRAINING = 'education training', _('فروش و بازاریابی')
+        ENGINEER_CONSTRACTION = 'engineer construction', _('آموزش و تربیت')
+        ART_DESIGN = 'art design', _('مهندسی و ساخت')
+        RESTAURENT_FOOD_SERVICES = 'restaurant food services', _('خدمات رستورانی و غذایی')
+        COMMERCIAL_LEGAL = 'commercial legal', _('بازرگانی و حقوق')
+        ENVIRONMENT_SUSTAINABLITY = 'environment sustainability', _('محیط زیست و پایداری')
+    job = models.CharField(_('شغل'), max_length=26, choices=JobChoose.choices, default=None)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='job')
     
     def __str__(self) -> str:
@@ -69,4 +67,6 @@ class RecycleUser(User):
     deleted = Manager()
 
     class Meta:
+        verbose_name = _('کاربر پاک شده')
+        verbose_name_plural = _('کاربران پاک شده')
         proxy = True

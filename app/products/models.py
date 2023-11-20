@@ -19,6 +19,7 @@ class Option(CreateModel):
 
 class ProductAttributeModel(models.Model):
     title = models.CharField(_('عنوان ویژگی'), max_length=50, db_index=True)
+    product = models.ForeignKey('ProductModel', on_delete=models.PROTECT, related_name='pro_attr')
     
     def __str__(self) -> str:
         return self.title
@@ -31,6 +32,8 @@ class ProductAttributeModel(models.Model):
 
 class ProductAttributeValueModel(models.Model):
     title = models.CharField(_('ویژگی'), max_length=50, blank=True)
+    product = models.ForeignKey('ProductModel', on_delete=models.PROTECT, related_name='pro_attr_value')
+
     
     def __str__(self) -> str:
         return self.title
@@ -60,11 +63,14 @@ class ProductLine(models.Model):
         db_table = 'product_line'
 
 
-class ProductModel(CreateModel):
-    category = models.OneToOneField('Category.Category', on_delete=models.PROTECT, related_name='categories')
+class ProductModel(CreateModel, UpdateModel):
+    saller = models.ForeignKey('SallerModel', on_delete=models.PROTECT, related_name='sallers')
+    category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='categories')
     product_name = models.CharField(_('نام کالا'), max_length=150, db_index=True)
-    description_product = models.TextField(blank=True, null=True)
+    slug = models.SlugField(allow_unicode=True, unique=True, max_length=150)
+    description_product = models.TextField(_("معرفی کالا"), blank=True, null=True)
     image = models.ForeignKey('images.ImagesModel', on_delete=models.PROTECT, related_name='product_images')
+    options = models.ManyToManyField(Option, blank=True)
     is_active = models.BooleanField(default=False)
 
     class Warrentychoose(models.TextChoices):
@@ -83,15 +89,14 @@ class ProductModel(CreateModel):
         
 
 class SallerModel(CreateModel, UpdateModel):
-    user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='users')
     company_name = models.CharField(_('اسم تولیدی'), max_length=50)
+    slug = models.SlugField(allow_unicode=True, unique=True)
+    user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='users')
     province_name = models.CharField(_('استان'), max_length=50)
     eprachy_name = models.CharField(_('شهرستان'), max_length=50)
     city = models.CharField(_('شهر'), max_length=50)
     address = models.TextField(_('ادرس'))
-    postacl_code = models.CharField(_('کد پستی'), max_length=11, unique=True)
-    nation_code = models.CharField(_('کد ملی'), max_length=11, unique=True)
-    saller = models.ForeignKey(ProductModel, on_delete=models.PROTECT, related_name='sallers')
+    postacl_code = models.CharField(_('آدرس پستی تولیدی'), max_length=11, unique=True)
 
     
     def __str__(self) -> str:

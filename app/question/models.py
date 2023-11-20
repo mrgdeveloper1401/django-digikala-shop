@@ -3,12 +3,43 @@ from django.utils.translation import gettext_lazy as _
 from common.models import UpdateModel, CreateModel
 
 
-class CommentProduct(CreateModel):
+class Rate(models.Model):
+    class RateChoose(models.TextChoices):
+        one = 'one', _('1')
+        tow = 'tow', _('2')
+        three = 'three', _('3')
+        four = 'four', _('4')
+        five = 'five', _('5')
+    rate_choose = models.CharField(_('امتیاز'), max_length=5, choices=RateChoose.choices, default=RateChoose.five)
+
+    def __str__(self) -> str:
+        return self.rate_choose
+    
+    class Meta:
+        abstract = True
+
+
+class RelationUser(models.Model):
+    class RelationUserChoose(models.TextChoices):
+        like = 'like', _('می پسندم')
+        dislike = 'dislike', _('نمی پسندم')
+    relation_choose = models.CharField(_('واکنش کاربر'), max_length=7, choices=RelationUserChoose.choices, default=None,
+                                       blank=True)
+
+    def __str__(self) -> str:
+        return self.relation_choose
+    
+    class Meta:
+        abstract = True
+
+
+class CommentProduct(CreateModel, Rate, RelationUser):
     user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='user_comment')
     product = models.ForeignKey('products.ProductModel', on_delete=models.PROTECT, related_name='product_comments')
     title_comment = models.CharField(_('عنوان نظر'), max_length=50)
     text_comment = models.TextField(_('نظر'), max_length=500)
-    
+    is_active =models.BooleanField(default=False)
+
     def __str__(self) -> str:
         return self.title_comment
     
@@ -22,17 +53,23 @@ class QuestionModel(CreateModel):
     user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='user_questions')
     product = models.ForeignKey('products.ProductModel', on_delete=models.PROTECT, related_name='product_questions')
     body_question = models.TextField(_('متن سوال'), max_length=500)
-    
+    is_active =models.BooleanField(default=False)
+
     def __str__(self) -> str:
         return self.body_question[:30]
 
+    class meta:
+        verbose_name = _('سوال')
+        verbose_name_plural = _('سوال ها')
+        db_table = 'question'
 
-class AnswerProduct(CreateModel):
+class AnswerProduct(CreateModel, RelationUser):
     user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='user_answers')
-    question = models.ForeignKey('products.ProductModel', on_delete=models.PROTECT, related_name='question_answers')
+    question = models.ForeignKey(QuestionModel, on_delete=models.PROTECT, related_name='questions')
     product = models.ForeignKey('products.ProductModel', on_delete=models.PROTECT, related_name='product_answers')
     answer_body = models.TextField(_('متن پاسخ'), max_length=500)
-    
+    is_active =models.BooleanField(default=True)
+
     def __str__(self) -> str:
         return self.answer_body[:30]
     
