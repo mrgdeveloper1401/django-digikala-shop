@@ -1,23 +1,24 @@
 from django.contrib import admin
-from . import models
+from .models import Option, ProductAttributeModel, ProductAttributeValueModel \
+, ProductModel, ProductLine, SallerModel
 
 
 class ProductAttributeInline(admin.TabularInline):
-    model = models.ProductAttributeModel
+    model = ProductAttributeModel
     extra = 0
 
 
 class ProductLineInline(admin.TabularInline):
-    model = models.ProductLine
+    model = ProductLine
     extra = 0
 
 
 class ProductAttributeValueInline(admin.TabularInline):
-    model = models.ProductAttributeValueModel
+    model = ProductAttributeValueModel
     extra = 0
 
 
-@admin.register(models.ProductModel)
+@admin.register(ProductModel)
 class ProductAdmin(admin.ModelAdmin):
     inlines = (ProductLineInline, ProductAttributeInline, ProductAttributeValueInline)
     raw_id_fields = ('category', 'saller')
@@ -30,12 +31,12 @@ class ProductAdmin(admin.ModelAdmin):
     filter_horizontal = ('options',)
 
 
-@admin.register(models.Option)
+@admin.register(Option)
 class OptionAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(models.SallerModel)
+@admin.register(SallerModel)
 class SallerAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('company_name',)}
 
@@ -49,13 +50,19 @@ class SallerAdmin(admin.ModelAdmin):
     list_per_page = 20
 
 
-@admin.register(models.ProductAttributeModel)
+@admin.register(ProductAttributeModel)
 class ProductAttributeAdmin(admin.ModelAdmin):
     list_display = ('title', 'product')
     list_per_page = 20
 
 
-@admin.register(models.ProductAttributeValueModel)
+@admin.register(ProductAttributeValueModel)
 class ProductAttributeValueModel(admin.ModelAdmin):
     list_display = ('title', 'product')
+    list_per_page = 20
+
+
+@admin.register(ProductLine)
+class ProductLineAdmin(admin.ModelAdmin):
+    # list_display = ('upc','sku', 'price', 'is_stock', 'is_delivery', 'number_product', 'is_active', 'product_line')
     list_per_page = 20

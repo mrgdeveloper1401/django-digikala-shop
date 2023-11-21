@@ -14,7 +14,8 @@ class UsersAdmin(UserAdmin):
     change_user_password_template = None
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("first_name", "last_name", "mobile_phone", 'birth_day', 'gender')}),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "mobile_phone", 'birth_day', 'gender',
+                                         'nation_code')}),
         (
             _("Permissions"),
             {

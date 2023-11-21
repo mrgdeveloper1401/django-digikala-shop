@@ -47,7 +47,8 @@ class profileSerializers(serializers.ModelSerializer):
             'last_name',
             'mobile_phone',
             'birth_day',
-            'last_login',
             'gender',
+            'nation_code',
+           'last_login',
             'created_at',
         )

@@ -41,7 +41,8 @@ client_urls = [
     path('category/client/', include('Category.client.urls', namespace='category_client')),
     # accounts client
     path('accounts/', include('accounts.clients.urls', namespace='account_client')),
-
+    # products client
+    path('products/', include('products.clients.urls', namespace='products_client')),
 ]
 # swagger doc
 open_api_doc = [

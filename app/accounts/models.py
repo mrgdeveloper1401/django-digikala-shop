@@ -19,7 +19,9 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
     is_verified_email = models.BooleanField(_('تایید ایمیل'), default=False)
     is_verified_mmobile_phone = models.BooleanField(_('تایید شماره همراه'), default=False)
     last_login = jmodels.jDateTimeField(_('تاریخ اخرین ورود'), blank=True, null=True, default=timezone.now())
-
+    nation_code = models.CharField(_('کد ملی'), max_length=10, blank=True, null=True,
+                                   help_text='max length 10 characters', unique=True)
+    
     class GenderChoose(models.TextChoices):
         female = 'female', _("زن")
         male = 'male', _("مرد")

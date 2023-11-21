@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django_jalali.db import models as jmodels
 from common.fields import UpperCharField
 from common.models import CreateModel, UpdateModel
+from .exception import Deplicated
 
 
 class Option(CreateModel):
@@ -56,7 +57,7 @@ class ProductLine(models.Model):
 
     def __str__(self) -> str:
         return self.upc
-    
+
     class Meta:
         verbose_name = _('جزییات محصول')
         verbose_name_plural = _('جزییات محصولات')
@@ -91,13 +92,12 @@ class ProductModel(CreateModel, UpdateModel):
 class SallerModel(CreateModel, UpdateModel):
     company_name = models.CharField(_('اسم تولیدی'), max_length=50)
     slug = models.SlugField(allow_unicode=True, unique=True)
-    user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='users')
+    user = models.OneToOneField('accounts.User', on_delete=models.PROTECT, related_name='users')
     province_name = models.CharField(_('استان'), max_length=50)
     eprachy_name = models.CharField(_('شهرستان'), max_length=50)
     city = models.CharField(_('شهر'), max_length=50)
     address = models.TextField(_('ادرس'))
     postacl_code = models.CharField(_('آدرس پستی تولیدی'), max_length=11, unique=True)
-
     
     def __str__(self) -> str:
         return self.company_name
