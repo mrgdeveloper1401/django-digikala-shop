@@ -10,7 +10,7 @@ from accounts.base_permission import IsOwner
 from rest_framework.permissions import IsAuthenticated
 
 
-class UserCreateApiView(CreateAPIView):
+class UserApiview(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerialziers
     
@@ -25,4 +25,7 @@ class JobView(viewsets.ModelViewSet):
     queryset = JobUserModel.objects.all()
     serializer_class = JobSerializers
     permission_classes = (IsOwner, )
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
     

@@ -28,14 +28,10 @@ class UserSerialziers(serializers.ModelSerializer):
         del validated_data['confirm_password']
         return User.objects.create_user(**validated_data)
     
-class JobSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = JobUserModel
-        fields = (
-            'job',
-            'user',
-        )
-    
+class JobSerializers(serializers.Serializer):
+    user = serializers.CharField(read_only=True)
+    job = serializers.CharField()
+
     def create(self, validated_data):
         return JobUserModel.objects.create(**validated_data)
     
