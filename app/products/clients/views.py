@@ -3,8 +3,9 @@ from rest_framework.response import Response
 from products.models import SallerModel, Option, ProductAttributeModel, ProductLine \
  , ProductModel, ProductAttributeValueModel
 from .serializers import SallerSerializer, OptionModelSerializer, ProductAttributeModelSerializer \
-, ProductLineSerializer
+, ProductLineSerializer, ProductModelSerializer
 from products.permission import IsOwner
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 
@@ -32,4 +33,10 @@ class ProductAttributeModelViewSet(ModelViewSet):
 class ProductLineModelViewSet(ModelViewSet):
     queryset = ProductLine.objects.all()
     serializer_class = ProductLineSerializer
+    permission_classes = (IsOwner, )
+
+
+class ProductModelViewSet(ModelViewSet):
+    queryset = ProductModel.objects.all()
+    serializer_class = ProductModelSerializer
     permission_classes = (IsOwner, )

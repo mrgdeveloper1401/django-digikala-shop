@@ -2,6 +2,8 @@ from rest_framework import serializers
 from products.models import SallerModel
 from products.models import Option, ProductAttributeModel, ProductAttributeValueModel \
   , ProductLine, ProductModel
+from Category.client.serialziers import CategorySerialziers
+
 
 class OptionModelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,6 +50,8 @@ class ProductLineSerializer(serializers.ModelSerializer):
 
 
 class ProductModelSerializer(serializers.ModelSerializer):
+    category = CategorySerialziers(read_only=True)
+    saller = SallerSerializer(read_only=True)
     class Meta:
         model = ProductModel
         exclude = (
@@ -55,4 +59,5 @@ class ProductModelSerializer(serializers.ModelSerializer):
             'updated_at',
             'id',
             'is_active',
+            'slug',
         )

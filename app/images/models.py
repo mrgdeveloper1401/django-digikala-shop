@@ -14,7 +14,7 @@ class ImagesModel(CreateModel, UpdateModel):
     width_image = models.SmallIntegerField(('عرض') ,editable=False)
     height_image = models.SmallIntegerField(('ارتفاع'), editable=False)
 
-    file_hash = models.CharField(max_length=40, db_index=True)
+    file_hash = models.CharField(max_length=40, db_index=True, blank=True)
     file_size = models.PositiveIntegerField(null=True, blank=True)
 
     focal_point_x = models.PositiveIntegerField(null=True, blank=True)
@@ -29,6 +29,9 @@ class ImagesModel(CreateModel, UpdateModel):
             hasher.update(chunk)
         self.file_hash = hasher.hexdigest()
         return super().save(*args, **kwargs)
+    
+    def __str__(self) -> str:
+        return f'{self.file_hash} -- {self.file_size}'
 
     class Meta:
         verbose_name = _('image')
