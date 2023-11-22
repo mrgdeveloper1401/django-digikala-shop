@@ -29,11 +29,11 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 # admin rest 
 admin_urls = [
     # accounts Admin
-    path('accounts/admin/', include('accounts.admins.urls', namespace='account_admin')),
+    # path('accounts/admin/', include('accounts.admins.urls', namespace='account_admin')),
     # category admin
-    path('Category/admin/', include('Category.admins.urls', namespace='category_admin')),
+    # path('Category/admin/', include('Category.admins.urls', namespace='category_admin')),
     # product admin
-    path('products/admin/user/', include('products.admins.urls', namespace='products_admin_user')),
+    # path('products/admin/user/', include('products.admins.urls', namespace='products_admin_user')),
 ]
 # client rest
 client_urls = [

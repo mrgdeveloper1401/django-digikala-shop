@@ -45,7 +45,7 @@ class ProductAttributeValueModel(models.Model):
         db_table = 'product_attribute_value'
 
 
-class ProductLine(models.Model):
+class ProductLine(CreateModel, UpdateModel):
     upc = models.CharField(_('بارکد'), max_length=20, unique=True)
     sku = models.CharField(_('بارکد اختصاصی انبارداری'), max_length=50, unique=True)
     price = models.DecimalField(_('قیمت کالا'), decimal_places=3, max_digits=12)

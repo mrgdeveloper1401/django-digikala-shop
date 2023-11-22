@@ -114,13 +114,9 @@ REST_FRAMEWORK = {
     
 }
 
-
 SPECTACULAR_SETTINGS = {
     'TITLE': 'django shop API',
-    'SERVE_INCLUDE_SCHEMA': False,
 }
-
-
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
