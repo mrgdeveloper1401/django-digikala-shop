@@ -1,12 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 from products.models import SallerModel, Option, ProductAttributeModel, ProductLine \
  , ProductModel, ProductAttributeValueModel
 from .serializers import SallerSerializer, OptionModelSerializer, ProductAttributeModelSerializer \
 , ProductLineSerializer, ProductModelSerializer
 from products.permission import IsOwner
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
 
 
 class SallerModelViewSet(ModelViewSet):
@@ -33,10 +32,15 @@ class ProductAttributeModelViewSet(ModelViewSet):
 class ProductLineModelViewSet(ModelViewSet):
     queryset = ProductLine.objects.all()
     serializer_class = ProductLineSerializer
-    permission_classes = (IsOwner, )
+    # permission_classes = (IsOwner, )
 
 
 class ProductModelViewSet(ModelViewSet):
     queryset = ProductModel.objects.all()
     serializer_class = ProductModelSerializer
     permission_classes = (IsOwner, )
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('category', 'saller', 'company_warrent_name')
+
+    # def list_product_by_category(self, request, category=None):
+    #     pass

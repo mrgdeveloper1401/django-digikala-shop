@@ -19,26 +19,23 @@ class ProductAttributeModelSerializer(serializers.ModelSerializer):
         )
 
 class SallerSerializer(serializers.ModelSerializer):
-    user = serializers.CharField(read_only=True)
     class Meta:
         model = SallerModel
         exclude = (
             'slug',
             'created_at',
             'updated_at',
-            'id'
+            'id',
+            'user'
         )
 
         extra_kwargs = {
             'user': {'read_only': True}
         }
 
-    def create(self, validated_data):
-        return SallerModel.objects.create(**validated_data)
-    
-
 
 class ProductLineSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(source='product_line', read_only=True)
     class Meta:
         model = ProductLine
         exclude = (
@@ -60,4 +57,5 @@ class ProductModelSerializer(serializers.ModelSerializer):
             'id',
             'is_active',
             'slug',
+            
         )

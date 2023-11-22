@@ -52,7 +52,7 @@ class ProductLine(CreateModel, UpdateModel):
     is_stock = models.BooleanField(_("موجود هست"), default=True)
     is_delivery = models.BooleanField(_("ارسال از طریق پست"), default=True)
     number_product = models.PositiveSmallIntegerField(_("تعداد محصول"))
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     product_line = models.ForeignKey('ProductModel', on_delete=models.PROTECT, related_name='product_lines')
 
     def __str__(self) -> str:
@@ -72,7 +72,7 @@ class ProductModel(CreateModel, UpdateModel):
     description_product = models.TextField(_("معرفی کالا"), blank=True, null=True)
     image = models.ForeignKey('images.ImagesModel', on_delete=models.PROTECT, related_name='product_images')
     options = models.ManyToManyField(Option, blank=True)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     class Warrentychoose(models.TextChoices):
         no_warrenty = 'no warrenty', _('no warrenty')
@@ -92,7 +92,7 @@ class ProductModel(CreateModel, UpdateModel):
 class SallerModel(CreateModel, UpdateModel):
     company_name = models.CharField(_('اسم تولیدی'), max_length=50)
     slug = models.SlugField(allow_unicode=True, unique=True)
-    user = models.OneToOneField('accounts.User', on_delete=models.PROTECT, related_name='users')
+    user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='users')
     province_name = models.CharField(_('استان'), max_length=50)
     eprachy_name = models.CharField(_('شهرستان'), max_length=50)
     city = models.CharField(_('شهر'), max_length=50)
