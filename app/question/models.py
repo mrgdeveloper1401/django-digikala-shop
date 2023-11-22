@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from common.models import UpdateModel, CreateModel
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Rate(models.Model):
@@ -33,7 +34,7 @@ class RelationUser(models.Model):
         abstract = True
 
 
-class CommentProduct(CreateModel, Rate, RelationUser):
+class CommentProduct(CreateModel, Rate):
     user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='user_comment')
     product = models.ForeignKey('products.ProductModel', on_delete=models.PROTECT, related_name='product_comments')
     title_comment = models.CharField(_('عنوان نظر'), max_length=50)
@@ -63,11 +64,12 @@ class QuestionModel(CreateModel):
         verbose_name_plural = _('سوال ها')
         db_table = 'question'
 
-class AnswerProduct(CreateModel, RelationUser):
+class AnswerProduct(MPTTModel, RelationUser, CreateModel):
     user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='user_answers')
     question = models.ForeignKey(QuestionModel, on_delete=models.PROTECT, related_name='questions')
     product = models.ForeignKey('products.ProductModel', on_delete=models.PROTECT, related_name='product_answers')
     answer_body = models.TextField(_('متن پاسخ'), max_length=500)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     is_active =models.BooleanField(default=True)
 
     def __str__(self) -> str:

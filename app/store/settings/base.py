@@ -31,6 +31,7 @@ REST_FRAMEWORK = [
     'rest_framework',
     'drf_spectacular',
     'treebeard',
+    'mptt',
 ]
 
 INSTALLED_APPS = [
