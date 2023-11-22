@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from products.models import SallerModel, Option, ProductAttributeModel, ProductLine \
  , ProductModel, ProductAttributeValueModel
 from .serializers import SallerSerializer, OptionModelSerializer, ProductAttributeModelSerializer \
@@ -39,8 +40,9 @@ class ProductModelViewSet(ModelViewSet):
     queryset = ProductModel.objects.all()
     serializer_class = ProductModelSerializer
     permission_classes = (IsOwner, )
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, SearchFilter)
     filterset_fields = ('category', 'saller', 'company_warrent_name')
+    search_fields = ('product_name', )
 
     # def list_product_by_category(self, request, category=None):
     #     pass
