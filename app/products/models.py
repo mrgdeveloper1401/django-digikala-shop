@@ -1,9 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django_jalali.db import models as jmodels
-from common.fields import UpperCharField
+from django.contrib.gis.db import models as gis_models
+from location_field.models.plain import PlainLocationField
 from common.models import CreateModel, UpdateModel
-from .exception import Deplicated
 
 
 class Option(CreateModel):
@@ -59,13 +58,12 @@ class ProductLine(CreateModel, UpdateModel):
         return self.upc
 
     class Meta:
-        verbose_name = _('جزییات محصول')
-        verbose_name_plural = _('جزییات محصولات')
+        verbose_name = _('product line')
+        verbose_name_plural = _('product lines')
         db_table = 'product_line'
 
 
 class ProductModel(CreateModel, UpdateModel):
-    saller = models.ForeignKey('SallerModel', on_delete=models.PROTECT, related_name='sallers')
     category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='categories')
     product_name = models.CharField(_('نام کالا'), max_length=150, db_index=True)
     slug = models.SlugField(allow_unicode=True, unique=True, max_length=150)
@@ -87,22 +85,3 @@ class ProductModel(CreateModel, UpdateModel):
         verbose_name = _('product')
         verbose_name_plural = _('products')
         db_table = 'product'
-        
-
-class SallerModel(CreateModel, UpdateModel):
-    company_name = models.CharField(_('اسم تولیدی'), max_length=50)
-    slug = models.SlugField(allow_unicode=True, unique=True)
-    user = models.ForeignKey('accounts.User', on_delete=models.PROTECT, related_name='users')
-    province_name = models.CharField(_('استان'), max_length=50)
-    eprachy_name = models.CharField(_('شهرستان'), max_length=50)
-    city = models.CharField(_('شهر'), max_length=50)
-    address = models.TextField(_('ادرس'))
-    postacl_code = models.CharField(_('آدرس پستی تولیدی'), max_length=11, unique=True)
-    
-    def __str__(self) -> str:
-        return self.company_name
-
-    class Meta:
-        verbose_name = _('saller')
-        verbose_name_plural = _('sellers')
-        db_table ='saller'

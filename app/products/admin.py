@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Option, ProductAttributeModel, ProductAttributeValueModel \
-, ProductModel, ProductLine, SallerModel
+, ProductModel, ProductLine
 
 
 class ProductAttributeInline(admin.TabularInline):
@@ -21,7 +21,7 @@ class ProductAttributeValueInline(admin.TabularInline):
 @admin.register(ProductModel)
 class ProductAdmin(admin.ModelAdmin):
     inlines = (ProductLineInline, ProductAttributeInline, ProductAttributeValueInline)
-    raw_id_fields = ('category', 'saller')
+    raw_id_fields = ('category',)
     prepopulated_fields = {'slug': ('product_name',)}
     list_display = ('category', 'product_name', 'is_active', 'created_at', 'updated_at')
     search_fields = ('product_name',)
@@ -34,20 +34,6 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Option)
 class OptionAdmin(admin.ModelAdmin):
     pass
-
-
-@admin.register(SallerModel)
-class SallerAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('company_name',)}
-
-    fieldsets = (
-        ('کاربر', {'fields': ('user',)}),
-        ('مشخصات فروشنده', {'fields': ('company_name', 'slug', 'province_name', 'eprachy_name', 'city', 'address', 'postacl_code')})
-    )
-    list_display = ('user', 'company_name', 'created_at', 'id')
-    search_fields = ('company_name',)
-    list_filter = ('created_at', )
-    list_per_page = 20
 
 
 @admin.register(ProductAttributeModel)

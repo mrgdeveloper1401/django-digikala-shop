@@ -22,6 +22,7 @@ CREATE_APP = [
     'products.apps.ProductsConfig',
     'images.apps.ImagesConfig',
     'question.apps.QuestionConfig',
+    'sallers.apps.SallersConfig',
     
 ]
 
@@ -31,7 +32,8 @@ REST_FRAMEWORK = [
     'drf_spectacular',
     'treebeard',
     'mptt',
-    'django_filters'
+    'django_filters',
+    'location_field.apps.DefaultConfig'
 ]
 
 INSTALLED_APPS = [
