@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from Category.models import Category
 from . import serialziers
+from django.db import connection, reset_queries
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):

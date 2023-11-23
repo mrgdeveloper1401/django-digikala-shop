@@ -7,6 +7,7 @@ from .serializers import OptionModelSerializer, ProductAttributeModelSerializer 
 , ProductLineSerializer, ProductModelSerializer
 from products.permission import IsOwner
 from django.db import connection
+from django.db import reset_queries
 
 
 class OptionModelViewSet(ReadOnlyModelViewSet):
@@ -25,14 +26,14 @@ class ProductLineModelViewSet(ReadOnlyModelViewSet):
     queryset = ProductLine.objects.all()
     serializer_class = ProductLineSerializer
     permission_classes = (IsOwner, )
-    print('product line is', connection.queries)
-
-
+    
+    
 class ProductModelViewSet(ReadOnlyModelViewSet):
-    queryset = ProductModel.objects.all()
+    queryset = ProductModel.objects.select_related()
     serializer_class = ProductModelSerializer
     permission_classes = (IsOwner, )
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filterset_fields = ('category', 'company_warrent_name', )
     search_fields = ('product_name', )
-    print('product model is', connection.queries)
+
+
