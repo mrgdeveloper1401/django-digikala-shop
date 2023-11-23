@@ -18,26 +18,28 @@ class ProductAttributeModelSerializer(serializers.ModelSerializer):
         )
 
 class ProductLineSerializer(serializers.ModelSerializer):
-    product_name = serializers.CharField(source='product_line', read_only=True)
     class Meta:
         model = ProductLine
-        exclude = (
-            'created_at',
-            'updated_at',
-            'id',
-            'is_active',
+        fields = (
+            'price',
+            'is_stock',
+            'is_delivery',
+            'number_product',
         )
 
 
 class ProductModelSerializer(serializers.ModelSerializer):
-    category = CategorySerialziers(read_only=True)
+    category = CategorySerialziers(read_only=True,)
+    product_lines = ProductLineSerializer(many=True,)
+    name = serializers.CharField(source='product_name',)
+    warrenty = serializers.CharField(source='company_warrent_name',)
     class Meta:
         model = ProductModel
-        exclude = (
-            'created_at',
-            'updated_at',
-            'id',
-            'is_active',
-            'slug',
-            
+        fields = (
+            'category',
+            'name',
+            'description_product',
+            'image',
+            'warrenty',
+            'product_lines',
         )

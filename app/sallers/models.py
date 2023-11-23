@@ -77,13 +77,15 @@ class GenuinSaller(CreateModel, UpdateModel):
         return self.shop_name
 
     class Meta:
-        verbose_name = _('saller')
-        verbose_name_plural = _('sellers')
+        verbose_name = _('genuis saller')
+        verbose_name_plural = _('genuis sellers')
         db_table ='genuin_saller'
 
 
 class SignatoryModel(CreateModel, UpdateModel):
     name = models.CharField(_('امضا کننده مالک شرکت'), max_length=50)
+    company_owner_signatory = models.ForeignKey('legalSaller', on_delete=models.PROTECT, related_name='signatories')
+
 
     def __str__(self) -> str:
         return self.name
@@ -91,6 +93,7 @@ class SignatoryModel(CreateModel, UpdateModel):
     class Meta:
         verbose_name = _('signatory')
         verbose_name_plural = _('signatories')
+        db_table = 'signatories'
 
 
 class legalSaller(CreateModel, UpdateModel):
@@ -99,7 +102,6 @@ class legalSaller(CreateModel, UpdateModel):
     economy_code_company = models.CharField(_('کد اقتصادی شرکت'), max_length=12)
     sheba_number = models.CharField(_('شماره شبای  بانکی'), max_length=24, unique=True,
                                     help_text='IR-000000000000000000000000')
-    company_owner_signatory = models.ForeignKey(SignatoryModel, on_delete=models.PROTECT, related_name='signatories')
 
     def __str__(self) -> str:
         return self.company_name

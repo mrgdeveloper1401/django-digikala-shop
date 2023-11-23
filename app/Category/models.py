@@ -10,7 +10,6 @@ class Category(MP_Node):
     is_public = models.BooleanField(default=True)
 
     objects = CategoryQueryset.as_manager()
-    node_order_by = ('-title',)
     
     def __str__(self) -> str:
         return self.title

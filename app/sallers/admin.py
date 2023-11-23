@@ -1,15 +1,20 @@
 from django.contrib import admin
-from .models import GenuinSaller, legalSaller, MultipleChooseAttribute, Multiplehoose, SignatoryModel
+from .models import GenuinSaller, legalSaller, MultipleChooseAttribute, Multiplehoose, SignatoryModel \
+    , LocationModel
 
+
+class SignatureInline(admin.TabularInline):
+    model = SignatoryModel
+    extra = 1
 
 @admin.register(GenuinSaller)
 class GenuinSallerAdmin(admin.ModelAdmin):
-    pass
+    ...
 
 
 @admin.register(legalSaller)
 class legalSallerAdmin(admin.ModelAdmin):
-    pass
+    inlines = (SignatureInline,)
 
 
 @admin.register(MultipleChooseAttribute)
@@ -24,4 +29,9 @@ class MultiplehooseAdmin(admin.ModelAdmin):
 
 @admin.register(SignatoryModel)
 class SignatoryModelAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(LocationModel)
+class LocationAdmin(admin.ModelAdmin):
     pass

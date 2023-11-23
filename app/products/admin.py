@@ -20,7 +20,7 @@ class ProductAttributeValueInline(admin.TabularInline):
 
 @admin.register(ProductModel)
 class ProductAdmin(admin.ModelAdmin):
-    inlines = (ProductLineInline, ProductAttributeInline, ProductAttributeValueInline)
+    inlines = (ProductLineInline,)
     raw_id_fields = ('category',)
     prepopulated_fields = {'slug': ('product_name',)}
     list_display = ('category', 'product_name', 'is_active', 'created_at', 'updated_at')
