@@ -64,6 +64,7 @@ class ProductLine(CreateModel, UpdateModel):
 
 
 class ProductModel(CreateModel, UpdateModel):
+    saller = models.ForeignKey('sallers.GenuinSaller', on_delete=models.CASCADE, related_name='sallers')
     category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='categories')
     product_name = models.CharField(_('نام کالا'), max_length=150, db_index=True)
     slug = models.SlugField(allow_unicode=True, unique=True, max_length=150)

@@ -26,14 +26,20 @@ class ProductLineModelViewSet(ReadOnlyModelViewSet):
     queryset = ProductLine.objects.all()
     serializer_class = ProductLineSerializer
     permission_classes = (IsOwner, )
-    
+
     
 class ProductModelViewSet(ReadOnlyModelViewSet):
     queryset = ProductModel.objects.select_related()
     serializer_class = ProductModelSerializer
     permission_classes = (IsOwner, )
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    filterset_fields = ('category', 'company_warrent_name', )
+    filterset_fields = ('category', 'company_warrent_name', 'saller')
     search_fields = ('product_name', )
+
+    def retrieve(self, request, *args, **kwargs):
+        reset_queries()
+        responce = super().retrieve(request, *args, **kwargs)
+        print(len(connection.queries))
+        return responce
 
 
