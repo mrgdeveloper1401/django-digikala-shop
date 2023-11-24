@@ -1,8 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.gis.db import models as gis_models
-from location_field.models.plain import PlainLocationField
 from common.models import CreateModel, UpdateModel
+from .Fields import OrderFields
 
 
 class Option(CreateModel):
@@ -53,6 +52,7 @@ class ProductLine(CreateModel, UpdateModel):
     number_product = models.PositiveSmallIntegerField(_("تعداد محصول"))
     is_active = models.BooleanField(default=True)
     product_line = models.ForeignKey('ProductModel', on_delete=models.PROTECT, related_name='product_lines')
+    # order = OrderFields(_('تعداد سفارش'), unique_for_fields='product_line', blank=True)
 
     def __str__(self) -> str:
         return self.upc
@@ -69,7 +69,6 @@ class ProductModel(CreateModel, UpdateModel):
     product_name = models.CharField(_('نام کالا'), max_length=150, db_index=True)
     slug = models.SlugField(allow_unicode=True, unique=True, max_length=150)
     description_product = models.TextField(_("معرفی کالا"), blank=True, null=True)
-    image = models.ForeignKey('images.ImagesModel', on_delete=models.PROTECT, related_name='product_images')
     options = models.ManyToManyField(Option, blank=True)
     is_active = models.BooleanField(default=True)
 

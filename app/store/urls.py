@@ -47,6 +47,8 @@ client_urls = [
     path('questions/', include('question.clients.urls', namespace = 'questions_client')),
     # saller client
     path('sallers/', include('sallers.clients.urls', namespace ='sallers')),
+    # image client
+    path('images/', include('images.clients.urls', namespace='images_client')),
 ]
 # swagger doc
 open_api_doc = [

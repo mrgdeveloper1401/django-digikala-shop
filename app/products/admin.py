@@ -1,6 +1,12 @@
 from django.contrib import admin
 from .models import Option, ProductAttributeModel, ProductAttributeValueModel \
 , ProductModel, ProductLine
+from images.models import ImagesModel
+
+
+class ImageInline(admin.TabularInline):
+    model = ImagesModel
+    extra = 0
 
 
 class ProductAttributeInline(admin.TabularInline):
@@ -20,7 +26,7 @@ class ProductAttributeValueInline(admin.TabularInline):
 
 @admin.register(ProductModel)
 class ProductAdmin(admin.ModelAdmin):
-    inlines = (ProductLineInline,)
+    inlines = (ProductLineInline, ImageInline)
     raw_id_fields = ('category',)
     prepopulated_fields = {'slug': ('product_name',)}
     list_display = ('category', 'product_name', 'is_active', 'created_at', 'updated_at')
