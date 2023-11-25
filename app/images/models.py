@@ -7,7 +7,6 @@ from common.models import CreateModel, UpdateModel
 class ImagesModel(CreateModel, UpdateModel):
     image = models.ImageField(_('عکس'), upload_to='images/%Y/%m/%d/', height_field='height_image',
                               width_field='width_image')
-    # choose_image = models.ManyToManyField('self')
     display_order = models.PositiveIntegerField(default=0)
 
     alter_image = models.CharField(_('توضیح در مورد عکس'), max_length=50, null=True, blank=True)

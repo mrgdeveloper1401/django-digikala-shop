@@ -47,6 +47,7 @@ class ProductLineAttributeValueInline(admin.TabularInline):
 @admin.register(ProductLineModel)
 class ProductLineAdmin(admin.ModelAdmin):
     inlines = (ProductLineAttributeValueInline,)
+    raw_id_fields = ('product',)
     list_per_page = 20
     list_display = ('upc', 'sku', 'price', 'is_stock', 'is_delivery', 'is_active', 'number_product',)
     list_editable = ('is_delivery', 'is_active', 'number_product', 'is_stock')

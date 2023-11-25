@@ -19,6 +19,7 @@ class ProductAttributeModel(CreateModel, UpdateModel):
 
 class ProductAttributeValueModel(CreateModel, UpdateModel):
     attr_value = models.CharField(max_length=50, blank=True)
+    attribute = models.ForeignKey(ProductAttributeModel, on_delete=models.CASCADE, related_name='attributes')
     
     def __str__(self) -> str:
         return self.attr_value
@@ -30,15 +31,15 @@ class ProductAttributeValueModel(CreateModel, UpdateModel):
 
 
 class ProductLineAttributeValueModel(CreateModel, UpdateModel):
-    attr_value = models.ForeignKey(ProductAttributeValueModel, on_delete=models.CASCADE, related_name='pro_attr_values')
+    attr_values = models.ForeignKey(ProductAttributeValueModel, on_delete=models.CASCADE, related_name='pro_attr_values')
     product_line = models.ForeignKey('ProductLineModel', on_delete=models.CASCADE, related_name='pro_line_attr_values')
     attribute_model = models.ForeignKey(ProductAttributeModel, on_delete=models.CASCADE)  # این خط اضافه شده است
 
     def __str__(self) -> str:
-        return self.attr_value.attr_value
+        return self.attr_values.attr_value
     
     class Meta:
-        unique_together = (('attr_value', 'product_line'),)
+        unique_together = (('attr_values', 'product_line'),)
         verbose_name = _('product line attribute value')
         verbose_name_plural = _('product line attribute values')
 
@@ -64,7 +65,8 @@ class ProductLineModel(CreateModel, UpdateModel):
     number_product = models.PositiveSmallIntegerField(_("تعداد محصول"))
     is_active = models.BooleanField(default=True)
     attribute_value = models.ManyToManyField(ProductAttributeModel, through='ProductLineAttributeValueModel')
-
+    product = models.ForeignKey('ProductModel', on_delete=models.CASCADE, related_name='products')
+    
     def __str__(self) -> str:
         return self.upc
 
