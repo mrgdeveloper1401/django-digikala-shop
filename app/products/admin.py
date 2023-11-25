@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import ProductAttributeModel, ProductAttributeValueModel \
-, ProductModel, ProductLineModel, ProductLineAttributeValueModel, BrandModel
+, ProductModel, ProductLineModel, ProductLineAttributeValueModel, BrandModel \
+    ,ProductTypeAttributeModel, ProductTypeModel
 from images.models import ImagesModel
 from django_jalali.admin.filters import JDateFieldListFilter
 
@@ -17,7 +18,6 @@ class ImageInline(admin.TabularInline):
 
 @admin.register(ProductModel)
 class ProductAdmin(admin.ModelAdmin):
-    inlines = (ImageInline,)
     raw_id_fields = ('category', 'saller', 'brand')
     prepopulated_fields = {'slug': ('product_name',)}
     list_display = ('category', 'product_name', 'is_active', 'created_at', 'updated_at')
@@ -46,7 +46,7 @@ class ProductLineAttributeValueInline(admin.TabularInline):
 
 @admin.register(ProductLineModel)
 class ProductLineAdmin(admin.ModelAdmin):
-    inlines = (ProductLineAttributeValueInline,)
+    inlines = (ProductLineAttributeValueInline, ImageInline)
     raw_id_fields = ('product',)
     list_per_page = 20
     list_display = ('upc', 'sku', 'price', 'is_stock', 'is_delivery', 'is_active', 'number_product',)
@@ -62,3 +62,13 @@ class BrandAdmin(admin.ModelAdmin):
     list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
     search_fields = ('brand_name',)
     prepopulated_fields = {'slug': ('brand_name',)}
+    
+
+@admin.register(ProductTypeModel)
+class ProductTypeAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(ProductTypeAttributeModel)
+class ProductTypeAttributeAdmin(admin.ModelAdmin):
+    pass

@@ -20,7 +20,7 @@ class ImagesModel(CreateModel, UpdateModel):
     focal_point_y = models.PositiveIntegerField(null=True, blank=True)
     focal_point_width = models.PositiveIntegerField(null=True, blank=True)
     focal_point_height = models.PositiveIntegerField(null=True, blank=True)
-    product_image = models.ForeignKey('products.ProductModel', on_delete=models.PROTECT, related_name='images')
+    product_image = models.ForeignKey('products.ProductLineModel', on_delete=models.PROTECT, related_name='images')
     is_active = models.BooleanField(default=True)
     
     def save(self, *args, **kwargs):
