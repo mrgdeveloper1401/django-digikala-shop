@@ -1,27 +1,23 @@
 from rest_framework import serializers
-from products.models import Option, ProductAttributeModel, ProductAttributeValueModel \
-  , ProductLine, ProductModel
+from products.models import ProductAttributeModel, ProductAttributeValueModel \
+  , ProductLineModel, ProductModel
 from Category.client.serialziers import CategorySerialziers
 from sallers.clients.serialzers import GenuinSallerSerializer
-from images.clients.serialziers import ImageSerialziers
 
-
-class OptionModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Option
-        fields = ('title',)
 
 class ProductAttributeModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductAttributeModel
-        fields = (
-            'title',
-            'product',
-        )
+        fields = ('attr',)
+        
+class ProductAttributeValueSerialziers(serializers.ModelSerializer):
+    class Meta:
+        model = ProductAttributeValueModel
+        fields = ('attr_value', 'product')
 
 class ProductLineSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProductLine
+        model = ProductLineModel
         fields = (
             'price',
             'is_stock',
@@ -36,7 +32,6 @@ class ProductModelSerializer(serializers.ModelSerializer):
     saller = GenuinSallerSerializer()
     name = serializers.CharField(source='product_name',)
     warrenty = serializers.CharField(source='company_warrent_name',)
-    images = serializers.ImageField()
     class Meta:
         model = ProductModel
         fields = (

@@ -1,19 +1,19 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-from products.models import Option, ProductAttributeModel, ProductLine \
- , ProductModel, ProductAttributeValueModel
-from .serializers import OptionModelSerializer, ProductAttributeModelSerializer \
+from products.models import ProductAttributeModel, ProductLineModel \
+ , ProductModel
+from .serializers import ProductAttributeModelSerializer \
 , ProductLineSerializer, ProductModelSerializer
 from products.permission import IsOwner
 from django.db import connection
 from django.db import reset_queries
 
 
-class OptionModelViewSet(ReadOnlyModelViewSet):
-    queryset = Option.objects.all()
-    serializer_class = OptionModelSerializer
-    permission_classes = (IsOwner, )
+# class OptionModelViewSet(ReadOnlyModelViewSet):
+#     queryset = Option.objects.all()
+#     serializer_class = OptionModelSerializer
+#     permission_classes = (IsOwner, )
 
 
 class ProductAttributeModelViewSet(ReadOnlyModelViewSet):
@@ -23,7 +23,7 @@ class ProductAttributeModelViewSet(ReadOnlyModelViewSet):
 
 
 class ProductLineModelViewSet(ReadOnlyModelViewSet):
-    queryset = ProductLine.objects.all()
+    queryset = ProductLineModel.objects.all()
     serializer_class = ProductLineSerializer
     permission_classes = (IsOwner, )
 

@@ -4,38 +4,24 @@ from common.models import CreateModel, UpdateModel
 from .Fields import OrderFields
 
 
-class Option(CreateModel):
-    title = models.CharField(_('عنوان'), max_length=50, db_index=True)
-    
-    def __str__(self) -> str:
-        return self.title
-    
-    class Meta:
-        verbose_name = _('option')
-        verbose_name_plural = _('options')
-        db_table = 'option'
-        
-
 class ProductAttributeModel(models.Model):
-    title = models.CharField(_('عنوان ویژگی'), max_length=50, db_index=True)
-    product = models.ForeignKey('ProductModel', on_delete=models.PROTECT, related_name='pro_attr')
+    attr = models.CharField(max_length=50, db_index=True)
+    description = models.TextField(blank=True, null=True)
     
     def __str__(self) -> str:
-        return self.title
+        return self.attr
     
     class Meta:
         verbose_name = _('product attribute')
         verbose_name_plural = _('product attrobutes')
         db_table = 'product_attribute'
-        
+
 
 class ProductAttributeValueModel(models.Model):
-    title = models.CharField(_('ویژگی'), max_length=50, blank=True)
-    product = models.ForeignKey('ProductModel', on_delete=models.PROTECT, related_name='pro_attr_value')
-
+    attr_value = models.CharField(max_length=50, blank=True)
     
     def __str__(self) -> str:
-        return self.title
+        return self.attr_value
     
     class Meta:
         verbose_name = _('product attribute value')
@@ -43,7 +29,19 @@ class ProductAttributeValueModel(models.Model):
         db_table = 'product_attribute_value'
 
 
-class ProductLine(CreateModel, UpdateModel):
+class ProductLineAttributeValueModel(CreateModel, UpdateModel):
+    attr_value = models.ForeignKey(ProductAttributeValueModel, on_delete=models.CASCADE, related_name='pro_attr_values')
+    product_line = models.ForeignKey('ProductLineModel', on_delete=models.CASCADE, related_name='pro_line_attr_values')
+    attribute_model = models.ForeignKey(ProductAttributeModel, on_delete=models.CASCADE)  # این خط اضافه شده است
+
+    def __str__(self) -> str:
+        return self.attr_value
+    
+    class Meta:
+        unique_together = (('attr_value', 'product_line'),)
+
+
+class ProductLineModel(CreateModel, UpdateModel):
     upc = models.CharField(_('بارکد'), max_length=20, unique=True)
     sku = models.CharField(_('بارکد اختصاصی انبارداری'), max_length=50, unique=True)
     price = models.DecimalField(_('قیمت کالا'), decimal_places=3, max_digits=12)
@@ -53,6 +51,7 @@ class ProductLine(CreateModel, UpdateModel):
     is_active = models.BooleanField(default=True)
     product_line = models.ForeignKey('ProductModel', on_delete=models.PROTECT, related_name='product_lines')
     # order = OrderFields(_('تعداد سفارش'), unique_for_fields='product_line', blank=True)
+    attribute_value = models.ManyToManyField(ProductAttributeModel, through='ProductLineAttributeValueModel')
 
     def __str__(self) -> str:
         return self.upc
@@ -69,7 +68,6 @@ class ProductModel(CreateModel, UpdateModel):
     product_name = models.CharField(_('نام کالا'), max_length=150, db_index=True)
     slug = models.SlugField(allow_unicode=True, unique=True, max_length=150)
     description_product = models.TextField(_("معرفی کالا"), blank=True, null=True)
-    options = models.ManyToManyField(Option, blank=True)
     is_active = models.BooleanField(default=True)
 
     class Warrentychoose(models.TextChoices):
