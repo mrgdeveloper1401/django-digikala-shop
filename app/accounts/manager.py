@@ -1,7 +1,5 @@
-from django.contrib.auth.models import BaseUserManager, UserManager
-from django.db import models
-from django.db.models.query import QuerySet
-    
+from django.contrib.auth.models import BaseUserManager
+
     
 class UserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, mobile_phone, password=None):

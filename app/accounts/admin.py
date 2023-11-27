@@ -6,6 +6,7 @@ from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from django_jalali.admin.filters import JDateFieldListFilter
 from .models import User, JobUserModel, RecycleUser
+from django.utils import timezone
 
 
 @admin.register(User)
@@ -54,20 +55,25 @@ class UsersAdmin(UserAdmin):
     list_display_links = ('mobile_phone', 'email')
     readonly_fields = ('updated_at', 'is_deleted', 'deleted_at',)
     list_per_page = 20
+    # actions = ('soft_deleted_user',)
     
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         return User.objects.filter(is_deleted=False)
+    
+    # TODO
+    # def soft_deleted_user(self, request, queryset):
+    #     queryset.update(is_deleted=False, deleted_at=timezone.now, is_active=False)
 
 
 @admin.register(RecycleUser)
 class RecycleAdmin(admin.ModelAdmin):
-    actions = ('recover user',)
+    actions = ('recovery_user',)
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         return RecycleUser.deleted.filter(is_deleted=True)
     
-    @admin.action(description='recovery user')
-    def recover(self, request: HttpRequest, queryset: QuerySet[Any]):
-        queryset.update(is_deleted=False, deleted_at=None)
+
+    def recovery_user(self, request: HttpRequest, queryset: QuerySet[Any]):
+        queryset.update(is_deleted=False, deleted_at=None, is_active=True)
         
 
 @admin.register(JobUserModel)
