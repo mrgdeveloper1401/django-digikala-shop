@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django_jalali.db import models as jmodels
 from django.db.models import Manager
-from . import manager
+from .manager import UserManager
 from common.models import SoftDelete, CreateModel, UpdateModel
 from django.utils import timezone
     
@@ -34,7 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreateModel, UpdateMo
     def __str__(self) -> str:
         return self.email
     
-    objects = manager.UserManager()
+    objects = UserManager()
 
     class Meta:
         db_table = 'user'

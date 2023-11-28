@@ -43,7 +43,7 @@ class UsersAdmin(UserAdmin):
             },
         ),
     )
-    list_display = ("mobile_phone", "email", "first_name", "last_name", 'created_at', 'updated_at')
+    list_display = ("mobile_phone", "email", "first_name", "last_name", 'is_active', 'is_deleted', 'is_staff', 'is_superuser', 'deleted_at')
     list_filter = ("is_staff", "is_superuser", "is_active", ("created_at", JDateFieldListFilter), 
                    ('updated_at', JDateFieldListFilter))
     search_fields = ("mobile_phone", "first_name", "last_name", "email")
@@ -55,18 +55,29 @@ class UsersAdmin(UserAdmin):
     list_display_links = ('mobile_phone', 'email')
     readonly_fields = ('updated_at', 'is_deleted', 'deleted_at',)
     list_per_page = 20
-    # actions = ('soft_deleted_user',)
+    # TODO
+    # actions = ('enable_is_active_user', 'disable_is_active_user', 'soft_delete_user')
     
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         return User.objects.filter(is_deleted=False)
     
-    # TODO
-    # def soft_deleted_user(self, request, queryset):
-    #     queryset.update(is_deleted=False, deleted_at=timezone.now, is_active=False)
+    # def enable_is_active_user(self, queryset: QuerySet, request: HttpRequest):
+    #     users = self.get_queryset(request)
+    #     users.filter(pk__in=users.values_list('pk', flat=True)).update(is_active=True)
+        
+    # def disable_is_active_user(self, queryset, request):
+    #     users = self.get_queryset(request)
+    #     users.filter(pk__in=users.values_list('pk', flat=True)).update(is_active=False)
+
+    # def soft_delete_user(self, request, queryset):
+    #     users = self.get_queryset(request)
+    #     users.filter(pk__in=users.values_list('pk', flat=True)).update(is_deleted=True, deleted_at=timezone.now(), is_active=False)
 
 
 @admin.register(RecycleUser)
 class RecycleAdmin(admin.ModelAdmin):
+    list_display = ('email', 'mobile_phone', 'first_name', 'last_name', 'is_deleted', 'is_active', 'is_superuser', 'is_staff', 'deleted_at')
+    
     actions = ('recovery_user',)
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         return RecycleUser.deleted.filter(is_deleted=True)

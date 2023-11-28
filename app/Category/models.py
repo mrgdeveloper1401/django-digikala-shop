@@ -6,7 +6,7 @@ from django.utils.text import slugify
 
 
 class Category(MP_Node):
-    title = models.CharField(_('عنوان'), max_length=255, db_index=True)
+    title = models.CharField(max_length=255, db_index=True)
     slug = models.SlugField(unique=True, allow_unicode=True)
     is_public = models.BooleanField(default=True)
 
@@ -17,6 +17,4 @@ class Category(MP_Node):
 
     
     class Meta:
-        verbose_name = _('دسته بندی')
-        verbose_name_plural = _('دسته بندی ها')
         db_table = 'category'
