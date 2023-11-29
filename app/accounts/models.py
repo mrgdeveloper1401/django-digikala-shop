@@ -59,7 +59,7 @@ class JobUserModel(CreateModel, UpdateModel):
         ENVIRONMENT_SUSTAINABLITY = 'environment sustainability'
     job = models.CharField(max_length=26, choices=JobChoose.choices, default=None)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='job')
-    
+
     def __str__(self) -> str:
         return f'{self.user.email} -- {self.job}'
     

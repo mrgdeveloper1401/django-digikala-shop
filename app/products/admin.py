@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ProductAttributeModel, ProductAttributeValueModel \
+from .models import OptionGroup \
 , ProductModel, ProductLineModel, ProductLineAttributeValueModel, BrandModel \
     ,ProductTypeAttributeModel, ProductTypeModel
 from images.models import ImagesModel
@@ -27,16 +27,20 @@ class ProductAdmin(admin.ModelAdmin):
     list_per_page = 20
 
 
-@admin.register(ProductAttributeModel)
+@admin.register(OptionGroup)
 class ProductAttributeAdmin(admin.ModelAdmin):
-    list_display = ('attr', 'description')
+    list_display = ('title', 'created_at', 'updated_at')
+    search_fields = ('title',)
+    list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
     list_per_page = 20
 
 
-@admin.register(ProductAttributeValueModel)
-class ProductAttributeValueModel(admin.ModelAdmin):
-    list_display = ('attr_value', 'created_at', 'updated_at')
-    list_per_page = 20
+# @admin.register(OptionGroupValue)
+# class ProductAttributeValueModel(admin.ModelAdmin):
+#     list_display = ('title', 'option_group', 'creatdate', 'updated_at')
+#     search_fields = ('title',)
+#     list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
+#     list_per_page = 20
 
 
 class ProductLineAttributeValueInline(admin.TabularInline):
