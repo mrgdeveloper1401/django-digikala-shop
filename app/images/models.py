@@ -5,13 +5,13 @@ from common.models import CreateModel, UpdateModel
 
 
 class ImagesModel(CreateModel, UpdateModel):
-    image = models.ImageField(_('عکس'), upload_to='images/%Y/%m/%d/', height_field='height_image',
+    image = models.ImageField(upload_to='images/%Y/%m/%d/', height_field='height_image',
                               width_field='width_image')
     display_order = models.PositiveIntegerField(default=0)
 
-    alter_image = models.CharField(_('توضیح در مورد عکس'), max_length=50, null=True, blank=True)
-    width_image = models.SmallIntegerField(('عرض') ,editable=False)
-    height_image = models.SmallIntegerField(('ارتفاع'), editable=False)
+    alter_image = models.CharField(max_length=50, null=True, blank=True)
+    width_image = models.SmallIntegerField(editable=False)
+    height_image = models.SmallIntegerField(editable=False)
 
     file_hash = models.CharField(max_length=40, db_index=True, blank=True)
     file_size = models.PositiveIntegerField(null=True, blank=True)
@@ -35,6 +35,4 @@ class ImagesModel(CreateModel, UpdateModel):
         return f'{self.file_hash} -- {self.product_image}'
 
     class Meta:
-        verbose_name = _('image')
-        verbose_name_plural = _('images')
         db_table = 'images'

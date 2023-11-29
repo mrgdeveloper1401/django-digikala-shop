@@ -31,9 +31,6 @@ class UserSerialziers(serializers.ModelSerializer):
 class JobSerializers(serializers.Serializer):
     user = serializers.CharField(read_only=True)
     job = serializers.CharField()
-
-    def create(self, validated_data):
-        return JobUserModel.objects.create(**validated_data)
     
 
 class profileSerializers(serializers.ModelSerializer):
@@ -48,7 +45,4 @@ class profileSerializers(serializers.ModelSerializer):
             'mobile_phone',
             'birth_day',
             'gender',
-            'nation_code',
-           'last_login',
-            'created_at',
         )

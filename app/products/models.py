@@ -12,8 +12,6 @@ class ProductAttributeModel(CreateModel, UpdateModel):
         return self.attr
     
     class Meta:
-        verbose_name = _('product attribute')
-        verbose_name_plural = _('product attrobutes')
         db_table = 'product_attribute'
 
 
@@ -25,8 +23,6 @@ class ProductAttributeValueModel(CreateModel, UpdateModel):
         return self.attr_value
     
     class Meta:
-        verbose_name = _('product attribute value')
-        verbose_name_plural = _('product attribute values')
         db_table = 'product_attribute_value'
 
 
@@ -40,17 +36,15 @@ class ProductLineAttributeValueModel(CreateModel, UpdateModel):
     
     class Meta:
         unique_together = (('attribute', 'attribute_value'),)
-        verbose_name = _('product line attribute value')
-        verbose_name_plural = _('product line attribute values')
 
 
 class ProductLineModel(CreateModel, UpdateModel):
-    upc = models.CharField(_('بارکد'), max_length=20, unique=True)
-    sku = models.CharField(_('بارکد اختصاصی انبارداری'), max_length=50, unique=True)
-    price = models.DecimalField(_('قیمت کالا'), decimal_places=3, max_digits=12)
-    is_stock = models.BooleanField(_("موجود هست"), default=True)
-    is_delivery = models.BooleanField(_("ارسال از طریق پست"), default=True)
-    number_product = models.PositiveSmallIntegerField(_("تعداد محصول"))
+    upc = models.CharField(max_length=20, unique=True)
+    sku = models.CharField(max_length=50, unique=True)
+    price = models.DecimalField(decimal_places=3, max_digits=12)
+    is_stock = models.BooleanField(default=True)
+    is_delivery = models.BooleanField(default=True)
+    number_product = models.PositiveSmallIntegerField()
     is_active = models.BooleanField(default=True)
     attribute_value = models.ManyToManyField(ProductAttributeModel, through='ProductLineAttributeValueModel')
     product = models.ForeignKey('ProductModel', on_delete=models.CASCADE, related_name='products')
@@ -60,8 +54,6 @@ class ProductLineModel(CreateModel, UpdateModel):
         return self.upc
 
     class Meta:
-        verbose_name = _('product line')
-        verbose_name_plural = _('product lines')
         db_table = 'product_line'
 
 class ProductTypeModel(CreateModel, UpdateModel):
@@ -80,15 +72,13 @@ class ProductTypeAttributeModel(CreateModel, UpdateModel):
 
 
 class BrandModel(CreateModel, UpdateModel):
-    brand_name = models.CharField(_('نام برند'), max_length=100, unique=True)
+    brand_name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, allow_unicode=True)
     
     def __str__(self) -> str:
         return self.brand_name
     
     class Meta:
-        verbose_name = _('brand')
-        verbose_name_plural = _('brands')
         db_table = 'brand'
 
 
@@ -96,15 +86,13 @@ class ProductModel(CreateModel, UpdateModel):
     saller = models.ForeignKey('sallers.GenuinSaller', on_delete=models.CASCADE, related_name='sallers')
     category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='categories')
     brand = models.ForeignKey(BrandModel, on_delete=models.CASCADE, related_name='brands')
-    product_name = models.CharField(_('نام کالا'), max_length=150, db_index=True)
+    product_name = models.CharField(max_length=150, db_index=True)
     slug = models.SlugField(allow_unicode=True, unique=True, max_length=150)
-    description_product = models.TextField(_("معرفی کالا"), blank=True, null=True)
+    description_product = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     
     def __str__(self) -> str:
         return self.product_name
 
     class Meta:
-        verbose_name = _('product')
-        verbose_name_plural = _('products')
         db_table = 'product'

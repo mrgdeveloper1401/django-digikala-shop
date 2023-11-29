@@ -23,6 +23,7 @@ CREATE_APP = [
     'images.apps.ImagesConfig',
     'question.apps.QuestionConfig',
     'sallers.apps.SallersConfig',
+    'analyze.apps.AnalyzeConfig',
     
 ]
 
