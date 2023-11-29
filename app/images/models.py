@@ -20,7 +20,6 @@ class ImagesModel(CreateModel, UpdateModel):
     focal_point_y = models.PositiveIntegerField(null=True, blank=True)
     focal_point_width = models.PositiveIntegerField(null=True, blank=True)
     focal_point_height = models.PositiveIntegerField(null=True, blank=True)
-    product_image = models.ForeignKey('products.ProductLineModel', on_delete=models.PROTECT, related_name='images')
     is_active = models.BooleanField(default=True)
     
     def save(self, *args, **kwargs):
@@ -32,7 +31,7 @@ class ImagesModel(CreateModel, UpdateModel):
         return super().save(*args, **kwargs)
     
     def __str__(self) -> str:
-        return f'{self.file_hash} -- {self.product_image}'
+        return f'{self.file_hash}'
 
     class Meta:
         db_table = 'images'

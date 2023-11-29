@@ -5,8 +5,7 @@ from django.db.models.query import QuerySet
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from django_jalali.admin.filters import JDateFieldListFilter
-from .models import User, JobUserModel, RecycleUser
-from django.utils import timezone
+from .models import User, JobUserModel, RecycleUser, LegalUser, RecycleLegalUser
 
 
 @admin.register(User)
@@ -94,3 +93,15 @@ class JobAdmin(admin.ModelAdmin):
     list_filter =(('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
     raw_id_fields = ('user',)
     list_display_links =('job', 'user')
+    
+
+@admin.register(LegalUser)
+class LegalUserAdmin(admin.ModelAdmin):
+    list_display = ('organization_name', 'economy_code', 'nation_code_organization', 'created_at', 'is_enable')
+    search_fields =('organization_name', )
+    list_filter =(('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter), 'is_enable')
+
+
+@admin.register(RecycleLegalUser)
+class RecycleLegalUserAdmin(admin.ModelAdmin):
+    pass

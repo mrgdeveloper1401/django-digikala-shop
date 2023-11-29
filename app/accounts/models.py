@@ -67,7 +67,30 @@ class JobUserModel(CreateModel, UpdateModel):
         db_table = 'job'
 
 
+class LegalUser(User):
+    organization_name = models.CharField(max_length=100)
+    economy_code = models.CharField(max_length=12, help_text='max length 12 characters', unique=True)
+    nation_code_organization = models.CharField(max_length=11, help_text='max length 11 characters', unique=True)
+    state_name = models.CharField(max_length=50,blank=True, null=True)
+    city_name = models.CharField(max_length=10, blank=True, null=True)
+    landing_phone = models.CharField(max_length=11)
+    is_enable = models.BooleanField(default=True)
+    
+    def __str__(self) -> str:
+        return self.organization_name
+    
+    class Meta:
+        db_table = 'legal_user'
+
+
 class RecycleUser(User):
+    deleted = Manager()
+
+    class Meta:
+        proxy = True
+
+
+class RecycleLegalUser(LegalUser):
     deleted = Manager()
 
     class Meta:
