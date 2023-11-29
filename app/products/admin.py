@@ -1,29 +1,34 @@
 from django.contrib import admin
-from .models import OptionGroup \
-, ProductModel, ProductLineModel, ProductLineAttributeValueModel, BrandModel \
-    ,ProductTypeAttributeModel, ProductTypeModel
-from images.models import ImagesModel
+from .models import OptionGroup, ProductAttributeModel, ProductAttributeValueModel, ProductLineModel \
+    ,ProductModel
 from django_jalali.admin.filters import JDateFieldListFilter
 
 
-@admin.register(ProductLineAttributeValueModel)
+class ProductAttributeInline(admin.TabularInline):
+    model = ProductAttributeModel
+    extra = 1
+
+
+class ProductAttributeValueInline(admin.TabularInline):
+    model = ProductAttributeValueModel
+    extra = 1
+
+
+@admin.register(ProductAttributeValueModel)
 class ProductLineAttributeValueAdmin(admin.ModelAdmin):
     pass
 
 
-class ImageInline(admin.TabularInline):
-    model = ImagesModel
-    extra = 0
-
-
 @admin.register(ProductModel)
 class ProductAdmin(admin.ModelAdmin):
-    raw_id_fields = ('category', 'saller', 'brand')
+    ...
+    # raw_id_fields = ('category', 'saller', 'brand')
     prepopulated_fields = {'slug': ('product_name',)}
-    list_display = ('category', 'product_name', 'is_active', 'created_at', 'updated_at')
+    inlines = (ProductAttributeValueInline,)
+    list_display = ('category', 'product_name', 'is_public', 'created_at', 'updated_at')
     search_fields = ('product_name',)
-    list_filter = ('is_active', ('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
-    list_editable = ('is_active',)
+    list_filter = ('is_public', ('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
+    list_editable = ('is_public',)
     list_per_page = 20
 
 
@@ -43,36 +48,20 @@ class ProductAttributeAdmin(admin.ModelAdmin):
 #     list_per_page = 20
 
 
-class ProductLineAttributeValueInline(admin.TabularInline):
-    model = ProductLineAttributeValueModel
-    extra = 0
-
-
 @admin.register(ProductLineModel)
 class ProductLineAdmin(admin.ModelAdmin):
-    inlines = (ProductLineAttributeValueInline, ImageInline)
-    raw_id_fields = ('product',)
+    prepopulated_fields = {'slug': ('title_productLine',)}
+    list_display = ('title_productLine', 'created_at', 'updated_at', 'is_publish', 'has_attribute', 'attribute_count')
+    inlines = (ProductAttributeInline,)
     list_per_page = 20
-    list_display = ('upc', 'sku', 'price', 'is_stock', 'is_delivery', 'is_active', 'number_product',)
-    list_editable = ('is_delivery', 'is_active', 'number_product', 'is_stock')
-    search_fields = ('price', )
+    list_editable = ('is_publish',)
+    search_fields = ('title_productLine', )
     list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
-    
-
-@admin.register(BrandModel)
-class BrandAdmin(admin.ModelAdmin):
-    list_display = ('brand_name', 'created_at', 'updated_at')
-    list_per_page = 20
-    list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
-    search_fields = ('brand_name',)
-    prepopulated_fields = {'slug': ('brand_name',)}
-    
-
-@admin.register(ProductTypeModel)
-class ProductTypeAdmin(admin.ModelAdmin):
-    pass
 
 
-@admin.register(ProductTypeAttributeModel)
+@admin.register(ProductAttributeModel)
 class ProductTypeAttributeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('attribute_title', 'types', 'option_group', 'product_line', 'is_active', 'created_at', 'updated_at')
+    search_fields = ('attribute_title', 'product_line')
+    list_filter = ('is_active', ('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
+    list_editable = ('is_active',)

@@ -42,7 +42,7 @@ client_urls = [
     # accounts client
     path('accounts/', include('accounts.clients.urls', namespace='account_client')),
     # products client
-    path('products/', include('products.clients.urls', namespace='products_client')),
+    # path('products/', include('products.clients.urls', namespace='products_client')),
     # quantities client
     path('questions/', include('question.clients.urls', namespace = 'questions_client')),
     # saller client
