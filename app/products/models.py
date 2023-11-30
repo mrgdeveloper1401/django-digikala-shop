@@ -1,12 +1,13 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from common.models import CreateModel, UpdateModel
-from .Fields import OrderFields
+# from .Fields import OrderFields
 
 
 class OptionGroup(CreateModel, UpdateModel):
     title = models.CharField(max_length=50)
-    
+    is_publish = models.BooleanField(default=True)
+
     def __str__(self) -> str:
         return self.title
     
@@ -19,7 +20,7 @@ class ProductLineModel(CreateModel, UpdateModel):
     sku = models.CharField(max_length=24, unique=True, blank=True, null=True)
     product = models.ForeignKey('ProductModel', on_delete=models.PROTECT, related_name='line_products', blank=True)
     stock_quantity = models.PositiveIntegerField(default=0)
-    is_publish = models.BooleanField(default=False)
+    is_publish = models.BooleanField(default=True)
     
 
     def __str__(self) -> str:
@@ -47,7 +48,7 @@ class ProductModel(CreateModel, UpdateModel):
     product_name = models.CharField(max_length=100, blank=True, null=True)
     slug = models.SlugField(allow_unicode=True)
     upc = models.CharField(max_length=24, unique=True, blank=True, null=True)
-    is_public = models.BooleanField(default=False)
+    is_publish = models.BooleanField(default=False)
     category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='product_categories')
     brand = models.ForeignKey('Category.BrandModel', on_delete=models.PROTECT, related_name='product_brand')
     
@@ -73,6 +74,7 @@ class ProductAttributeModel(CreateModel, UpdateModel):
     option_group = models.ForeignKey(OptionGroup, on_delete=models.PROTECT, related_name='option_groups')
     product_line = models.ForeignKey(ProductLineModel, on_delete=models.PROTECT, related_name='product_lines')
     is_active = models.BooleanField(default=True)
+    is_publish = models.BooleanField(default=True)
 
     def __str__(self) -> str:
         return self.attribute_title
@@ -90,8 +92,8 @@ class ProductAttributeValueModel(CreateModel, UpdateModel):
     value_float = models.FloatField(blank=True, null=True)
     value_datetime = models.DateTimeField(blank=True, null=True)
     value_date = models.DateField(blank=True, null=True)
-    
-    
+    is_publish = models.BooleanField(default=True)
+
     def __str__(self) -> str:
         return self.product.product_name
     
