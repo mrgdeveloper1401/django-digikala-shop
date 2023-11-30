@@ -15,14 +15,15 @@ class OptionGroup(CreateModel, UpdateModel):
 
 
 class ProductLineModel(CreateModel, UpdateModel):
-    title_productLine = models.CharField(max_length=100)
-    slug = models.SlugField(allow_unicode=True)
-    description = models.TextField(help_text='explain description product', blank=True, null=True)
-    require_shipping = models.BooleanField(default=True)
+    price = models.DecimalField(decimal_places=3, max_digits=12)
+    sku = models.CharField(max_length=24, unique=True, blank=True, null=True)
+    product = models.ForeignKey('ProductModel', on_delete=models.PROTECT, related_name='line_products', blank=True)
+    stock_quantity = models.PositiveIntegerField(default=0)
     is_publish = models.BooleanField(default=False)
     
+
     def __str__(self) -> str:
-        return self.title_productLine
+        return self.product.product_name
     
     @property
     def has_attribute(self):
@@ -38,17 +39,17 @@ class ProductLineModel(CreateModel, UpdateModel):
 
 class ProductModel(CreateModel, UpdateModel):
     class ProductStructre(models.TextChoices):
-        standallowne = 'standalone'
+        standalone = 'standalone'
         parent = 'parent'
         child = 'child'
-    structure = models.CharField(max_length=12, choices=ProductStructre.choices, default=ProductStructre.standallowne)
+    structure = models.CharField(max_length=12, choices=ProductStructre.choices, default=ProductStructre.standalone)
     parent = models.ForeignKey('self', on_delete=models.PROTECT, blank=True, null=True, related_name='parents')
     product_name = models.CharField(max_length=100, blank=True, null=True)
     slug = models.SlugField(allow_unicode=True)
     upc = models.CharField(max_length=24, unique=True, blank=True, null=True)
     is_public = models.BooleanField(default=False)
-    product_line = models.ForeignKey(ProductLineModel, on_delete=models.PROTECT, related_name='product_classes')
     category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='product_categories')
+    brand = models.ForeignKey('Category.BrandModel', on_delete=models.PROTECT, related_name='product_brand')
     
     def __str__(self) -> str:
         return self.product_name

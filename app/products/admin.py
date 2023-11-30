@@ -14,6 +14,11 @@ class ProductAttributeValueInline(admin.TabularInline):
     extra = 1
 
 
+class ProducLineInline(admin.TabularInline):
+    model = ProductLineModel
+    extra = 1
+
+
 @admin.register(ProductAttributeValueModel)
 class ProductLineAttributeValueAdmin(admin.ModelAdmin):
     pass
@@ -22,9 +27,9 @@ class ProductLineAttributeValueAdmin(admin.ModelAdmin):
 @admin.register(ProductModel)
 class ProductAdmin(admin.ModelAdmin):
     ...
-    # raw_id_fields = ('category', 'saller', 'brand')
+    raw_id_fields = ('parent', 'category', 'brand',)
     prepopulated_fields = {'slug': ('product_name',)}
-    inlines = (ProductAttributeValueInline,)
+    inlines = (ProductAttributeValueInline, ProducLineInline)
     list_display = ('category', 'product_name', 'is_public', 'created_at', 'updated_at')
     search_fields = ('product_name',)
     list_filter = ('is_public', ('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
@@ -50,13 +55,11 @@ class ProductAttributeAdmin(admin.ModelAdmin):
 
 @admin.register(ProductLineModel)
 class ProductLineAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('title_productLine',)}
-    list_display = ('title_productLine', 'created_at', 'updated_at', 'is_publish', 'has_attribute', 'attribute_count')
+    list_display = ('product', 'price', 'sku', 'stock_quantity', 'is_publish', 'has_attribute', 'attribute_count')
     inlines = (ProductAttributeInline,)
     list_per_page = 20
     list_editable = ('is_publish',)
-    search_fields = ('title_productLine', )
-    list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
+    list_filter = ('is_publish', ('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
 
 
 @admin.register(ProductAttributeModel)

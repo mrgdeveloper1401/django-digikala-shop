@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Category.models import Category
+from Category.models import Category, BrandModel
 
 
 class CategorySerialziers(serializers.ModelSerializer):
@@ -7,3 +7,9 @@ class CategorySerialziers(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('category_name', )
+
+
+class BrandSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model = BrandModel
+        fields = ('brand_name', )
