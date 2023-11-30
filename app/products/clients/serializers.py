@@ -8,7 +8,6 @@ class ProductLineSerializer(ModelSerializer):
     class Meta:
         model = ProductLineModel
         fields = (
-            'product',
             'price',
             'stock_quantity',
         )
@@ -17,10 +16,12 @@ class ProductLineSerializer(ModelSerializer):
 class ProductSerialziers(ModelSerializer):
     category = CategorySerialziers()
     brand = BrandSerilizer()
+    product_lines = ProductLineSerializer(many=True)
     class Meta:
         model = ProductModel
         fields = (
             'category',
             'brand',
             'product_name',
+            'product_lines'
         )
