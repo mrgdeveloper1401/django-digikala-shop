@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import OptionGroup, ProductAttributeModel, ProductAttributeValueModel, ProductLineModel \
     ,ProductModel, ProductImage
 from django_jalali.admin.filters import JDateFieldListFilter
+from django.urls import reverse_lazy
 
 
 class ProductAttributeInline(admin.TabularInline):
@@ -70,3 +71,9 @@ class ProductTypeAttributeAdmin(admin.ModelAdmin):
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
     pass
+
+
+# class EditProductLineInline:
+#     edit = reverse_lazy(
+#         f"admin:{'products'}_{'ProductLineModel'}_change"
+#     )

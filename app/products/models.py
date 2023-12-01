@@ -104,7 +104,7 @@ class ProductAttributeValueModel(CreateModel, UpdateModel):
         
 class ProductImage(CreateModel, UpdateModel):
     image = models.ForeignKey('images.ImagesModel', on_delete=models.PROTECT, related_name='images')
-    product = models.ForeignKey(ProductModel, on_delete=models.PROTECT, related_name='products_image')
+    product_line = models.ForeignKey(ProductLineModel, on_delete=models.PROTECT, related_name='products_image_line')
     display_order = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
