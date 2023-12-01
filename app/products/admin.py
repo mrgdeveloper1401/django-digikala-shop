@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import OptionGroup, ProductAttributeModel, ProductAttributeValueModel, ProductLineModel \
-    ,ProductModel
+    ,ProductModel, ProductImage
 from django_jalali.admin.filters import JDateFieldListFilter
 
 
@@ -66,3 +66,7 @@ class ProductTypeAttributeAdmin(admin.ModelAdmin):
     list_filter = ('is_publish', ('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
     list_editable = ('is_publish',)
     
+    
+@admin.register(ProductImage)
+class ProductImageAdmin(admin.ModelAdmin):
+    pass

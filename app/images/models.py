@@ -20,7 +20,7 @@ class ImagesModel(CreateModel, UpdateModel):
     focal_point_y = models.PositiveIntegerField(null=True, blank=True)
     focal_point_width = models.PositiveIntegerField(null=True, blank=True)
     focal_point_height = models.PositiveIntegerField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    is_publish = models.BooleanField(default=True)
     
     def save(self, *args, **kwargs):
         self.file_size = self.image.size

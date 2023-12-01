@@ -51,7 +51,8 @@ class ProductModel(CreateModel, UpdateModel):
     is_publish = models.BooleanField(default=False)
     category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='product_categories')
     brand = models.ForeignKey('Category.BrandModel', on_delete=models.PROTECT, related_name='product_brand')
-    
+    image = models.ManyToManyField('ProductImage')
+
     def __str__(self) -> str:
         return self.product_name
 
@@ -99,3 +100,12 @@ class ProductAttributeValueModel(CreateModel, UpdateModel):
     
     class Meta:
         db_table = 'product_attribute_value'
+        
+        
+class ProductImage(CreateModel, UpdateModel):
+    image = models.ForeignKey('images.ImagesModel', on_delete=models.PROTECT, related_name='images')
+    product = models.ForeignKey(ProductModel, on_delete=models.PROTECT, related_name='products_image')
+    display_order = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        db_table = 'product_images'
