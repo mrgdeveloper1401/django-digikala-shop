@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from images.models import ImagesModel
+from images.models import Image
 
 
 class ImageSerialziers(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = ImagesModel
+        model = Image
         fields = ('image', )

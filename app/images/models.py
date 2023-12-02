@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from common.models import CreateModel, UpdateModel
 
 
-class ImagesModel(CreateModel, UpdateModel):
+class Image(CreateModel, UpdateModel):
     image = models.ImageField(upload_to='images/%Y/%m/%d/', height_field='height_image',
                               width_field='width_image')
     display_order = models.PositiveIntegerField(default=0)

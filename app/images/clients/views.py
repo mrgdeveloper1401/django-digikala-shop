@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from images.models import ImagesModel
+from images.models import Image
 from .serialziers import ImageSerialziers
 
 
 class ImagesViewSet(ReadOnlyModelViewSet):
-    queryset = ImagesModel.objects.all()
+    queryset = Image.objects.all()
     serializer_class = ImageSerialziers
