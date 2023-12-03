@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductLine, ProductType, ProductTypeAttrbute \
+from .models import Product, ProductLine, ProductType, ProductTypeAttribute \
     ,ProductLineAttributeValue, Attribute, AttributeValue, ProductImage
 from django_jalali.admin.filters import JDateFieldListFilter
 
@@ -16,6 +16,11 @@ class AttributeValueInline(admin.TabularInline):
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
+    extra = 0
+
+
+class ProductTypeInlin(admin.TabularInline):
+    model = ProductType
     extra = 0
 
 
@@ -42,7 +47,7 @@ class ProductLineAdmin(admin.ModelAdmin):
 
 @admin.register(ProductType)
 class ProductTypeAdmin(admin.ModelAdmin):
-    list_display = ('attribute_title', 'types', 'is_publish', 'created_at', 'updated_at')
+    list_display = ('produt_type_title', 'types', 'is_publish', 'created_at', 'updated_at')
     list_editable = ('is_publish',)
     list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
     list_per_page = 20
@@ -52,7 +57,7 @@ class ProductLineAttributeValueAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(ProductTypeAttrbute)
+@admin.register(ProductTypeAttribute)
 class ProductTypeAttrbuteAdmin(admin.ModelAdmin):
     pass
 

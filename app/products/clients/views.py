@@ -9,6 +9,8 @@ class ProductViewSet(ReadOnlyModelViewSet):
     serializer_class = ProductSerializer
     filter_backends = (DjangoFilterBackend, )
     filterset_fields = ('category', 'brand')
+    lookup_field = 'slug'
+            
 
 
 class ProductLineViewSet(ReadOnlyModelViewSet):

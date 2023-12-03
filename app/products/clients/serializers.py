@@ -19,11 +19,13 @@ class AttributeValueSerialziers(ModelSerializer):
 
 
 class ProductLineSerilizer(ModelSerializer):
+    attribute_value = AttributeValueSerialziers(many=True)
     class Meta:
         model = ProductLine
         fields = (
             'price',
             'stock_quantity',
+            'attribute_value'
         )
 
 

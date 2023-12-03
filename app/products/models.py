@@ -11,6 +11,7 @@ class ProductLine(CreateModel, UpdateModel):
     is_publish = models.BooleanField(default=True)
     attribute_value = models.ManyToManyField("AttributeValue", related_name="product_line_attribute_value", through='ProductLineAttributeValue')
     product = models.ForeignKey('Product', on_delete=models.PROTECT, related_name='product_line_products')
+    product_type = models.ForeignKey('ProductType', on_delete=models.PROTECT, related_name='product_types', blank=True)
 
     def __str__(self) -> str:
         return self.product.product_name
@@ -29,11 +30,13 @@ class Product(CreateModel, UpdateModel):
     parent = models.ForeignKey('self', on_delete=models.PROTECT, blank=True, null=True, related_name='parents')
     product_name = models.CharField(max_length=150, blank=True, null=True)
     slug = models.SlugField(allow_unicode=True, max_length=150)
+    description = models.TextField(blank=True, null=True)
     upc = models.CharField(max_length=24, unique=True, blank=True, null=True)
     is_publish = models.BooleanField(default=False)
     category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='product_categories')
     brand = models.ForeignKey('Category.BrandModel', on_delete=models.PROTECT, related_name='product_brand')
-
+    product_type = models.ForeignKey('ProductType', on_delete=models.PROTECT, related_name='product_product_type')
+    
     def __str__(self) -> str:
         return self.product_name
 
@@ -94,9 +97,9 @@ class ProductType(CreateModel, UpdateModel):
         charfield = 'charfield'
         option = 'option'
         multi_option = 'multi_option'
-    attribute_title = models.CharField(max_length=50)
+    produt_type_title = models.CharField(max_length=50)
     types = models.CharField(max_length=12, choices=TypeChoose.choices, default=TypeChoose.text)
-    attribute = models.ManyToManyField(Attribute, related_name='product_type_attribute')
+    attribute = models.ManyToManyField(Attribute, related_name='product_type_attribute', through='ProductTypeAttribute')
     is_publish = models.BooleanField(default=True)
 
     def __str__(self) -> str:
@@ -106,19 +109,17 @@ class ProductType(CreateModel, UpdateModel):
         db_table = 'product_attribute'
 
 
-class ProductTypeAttrbute(CreateModel, UpdateModel):
-    product_type = models.ForeignKey(ProductType, on_delete=models.PROTECT)
-    attribute = models.ForeignKey(Attribute, on_delete=models.PROTECT)
-    
-    def __str__(self) -> str:
-        return f'{self.product_type.attribute_title} -- {self.attribute.name}'
+class ProductTypeAttribute(CreateModel, UpdateModel):
+    attribute = models.ForeignKey(Attribute, on_delete=models.PROTECT, related_name='product_type_attribute_value')
+    product_type = models.ForeignKey(ProductType, on_delete=models.PROTECT, related_name='product_type_product_types')
     
     class Meta:
-        db_table = 'product_type_attribute_throught'
         unique_together = ('product_type', 'attribute')
-        
+        db_table = 'product_type_attributes'
+
+
 # class ProductTypeAttribute(CreateModel, UpdateModel):
-#     product = models.ForeignKey(ProductModel, on_delete=models.PROTECT, related_name='products')
+#     product = models.ForeignKey(ProductLine, on_delete=models.PROTECT, related_name='products')
 #     product_type = models.ForeignKey(ProductType, on_delete=models.PROTECT, related_name='product_types')
 #     value_text = models.TextField(blank=True, null=True)
 #     value_char = models.CharField(max_length=60)
