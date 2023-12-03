@@ -4,12 +4,19 @@ from .models import Product, ProductLine, ProductType, ProductTypeAttrbute \
 from django_jalali.admin.filters import JDateFieldListFilter
 
 
+class ProductLineInline(admin.TabularInline):
+    model = ProductLine
+    extra = 0
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    raw_id_fields = ('parent', 'category', 'brand', 'product_line')
+    inlines = (ProductLineInline,)
+    raw_id_fields = ('parent', 'category', 'brand', )
     prepopulated_fields = {'slug': ('product_name',)}
     filter_horizontal = ('image',)
-    list_display = ('is_publish', 'category', 'brand', 'product_name')
+    list_editable =('is_publish',)
+    list_display = ('product_name','is_publish', 'category', 'brand')
     list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
     list_per_page = 20    
 
@@ -18,6 +25,7 @@ class ProductAdmin(admin.ModelAdmin):
 class ProductLineAdmin(admin.ModelAdmin):
     list_display = ('price', 'is_publish', 'stock_quantity')
     list_editable = ('is_publish',)
+    raw_id_fields =('product',)
     list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
     list_per_page = 20
 

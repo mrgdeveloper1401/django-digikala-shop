@@ -1,41 +1,29 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from products.models import ProductLineModel, ProductModel, ProductImage
+from products.models import Product, ProductLine
 from Category.client.serialziers import CategorySerialziers, BrandSerilizer
-from images.models import ImagesModel
 from images.clients.serialziers import ImageSerialziers
 
 
-class ProductImageSerizliers(ModelSerializer):
+class ProductLineSerilizer(ModelSerializer):
     class Meta:
-        model = ProductImage
+        model = ProductLine
         fields = (
-            'image',
-            'product_line'
-        )
-
-
-class ProductLineSerializer(ModelSerializer):
-    products_image_line = ProductImageSerizliers(many=True)
-    class Meta:
-        model = ProductLineModel
-        fields = (
-            'products_image_line',
             'price',
             'stock_quantity',
         )
 
 
-class ProductSerialziers(ModelSerializer):
+class ProductSerializer(ModelSerializer):
     category = CategorySerialziers()
     brand = BrandSerilizer()
-    product_lines = ProductLineSerializer(many=True)
+    product_line_products = ProductLineSerilizer(many=True)
     class Meta:
-        model = ProductModel
+        model = Product
         fields = (
             'category',
             'brand',
+            'image',
             'product_name',
-            'slug',
-            'product_lines'
+            'product_line_products',
         )

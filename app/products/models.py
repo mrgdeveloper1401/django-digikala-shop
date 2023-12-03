@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from common.models import CreateModel, UpdateModel
 
+
 # product line model
 class ProductLine(CreateModel, UpdateModel):
     price = models.DecimalField(decimal_places=3, max_digits=12)
@@ -9,20 +10,14 @@ class ProductLine(CreateModel, UpdateModel):
     stock_quantity = models.PositiveIntegerField(default=0)
     is_publish = models.BooleanField(default=True)
     attribute_value = models.ManyToManyField("AttributeValue", related_name="product_line_attribute_value", through='ProductLineAttributeValue')
+    product = models.ForeignKey('Product', on_delete=models.PROTECT, related_name='product_line_products')
 
     def __str__(self) -> str:
         return self.product.product_name
-    
-    # @property
-    # def has_attribute(self):
-    #     return self.product_lines.exists()
-    
-    # @property
-    # def attribute_count(self):
-    #     return self.product_lines.count()
 
     class Meta:
         db_table = 'product_line'
+
 
 # product model
 class Product(CreateModel, UpdateModel):
@@ -39,7 +34,6 @@ class Product(CreateModel, UpdateModel):
     category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='product_categories')
     brand = models.ForeignKey('Category.BrandModel', on_delete=models.PROTECT, related_name='product_brand')
     image = models.ManyToManyField('images.Image', related_name="product_images")
-    product_line = models.ForeignKey(ProductLine, on_delete=models.PROTECT, related_name='product_lines')
 
     def __str__(self) -> str:
         return self.product_name

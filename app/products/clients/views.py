@@ -1,24 +1,13 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from .serializers import ProductSerialziers, ProductLineSerializer, ProductImageSerizliers
-from products.models import ProductModel, ProductLineModel, ProductImage
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
+from products.clients.serializers import ProductSerializer, ProductLineSerilizer
+from products.models import Product, ProductLine
 
 
 class ProductViewSet(ReadOnlyModelViewSet):
-    queryset = ProductModel.objects.all()
-    serializer_class = ProductSerialziers
-    filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('category', 'brand')
-    # search_fields = ('product_name', )
-    
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
 
 class ProductLineViewSet(ReadOnlyModelViewSet):
-    queryset = ProductLineModel.objects.all()
-    serializer_class = ProductLineSerializer
-
-    
-class ProductImageViewSet(ReadOnlyModelViewSet):
-    queryset = ProductImage.objects.all()
-    serializer_class = ProductImageSerizliers
-    
+    queryset = ProductLine.objects.all()
+    serializer_class = ProductLineSerilizer
