@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Product, ProductLine, ProductType, ProductTypeAttrbute \
-    ,ProductLineAttributeValue
+    ,ProductLineAttributeValue, Attribute, AttributeValue, ProductImage
 from django_jalali.admin.filters import JDateFieldListFilter
 
 
@@ -9,12 +9,21 @@ class ProductLineInline(admin.TabularInline):
     extra = 0
 
 
+class AttributeValueInline(admin.TabularInline):
+    model = ProductLineAttributeValue
+    extra = 0
+
+
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 0
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    inlines = (ProductLineInline,)
+    inlines = (ProductLineInline, ProductImageInline)
     raw_id_fields = ('parent', 'category', 'brand', )
     prepopulated_fields = {'slug': ('product_name',)}
-    filter_horizontal = ('image',)
     list_editable =('is_publish',)
     list_display = ('product_name','is_publish', 'category', 'brand')
     list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
@@ -23,6 +32,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductLine)
 class ProductLineAdmin(admin.ModelAdmin):
+    inlines = (AttributeValueInline,)
     list_display = ('price', 'is_publish', 'stock_quantity')
     list_editable = ('is_publish',)
     raw_id_fields =('product',)
@@ -44,4 +54,19 @@ class ProductLineAttributeValueAdmin(admin.ModelAdmin):
 
 @admin.register(ProductTypeAttrbute)
 class ProductTypeAttrbuteAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Attribute)
+class AttributeAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(AttributeValue)
+class AttributeValueAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(ProductImage)
+class ProductImageAdmin(admin.ModelAdmin):
     pass
