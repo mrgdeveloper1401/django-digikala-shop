@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Product, ProductLine, ProductType, ProductTypeAttribute \
-    ,ProductLineAttributeValue, Attribute, AttributeValue, ProductImage
+from .models import Product, ProductLine, ProductType \
+    ,Attribute, AttributeValue, ProductImage
 from django_jalali.admin.filters import JDateFieldListFilter
 
 
@@ -9,35 +9,35 @@ class ProductLineInline(admin.TabularInline):
     extra = 0
 
 
-class AttributeValueInline(admin.TabularInline):
-    model = ProductLineAttributeValue
-    extra = 0
-
-
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 0
 
 
-class ProductTypeInlin(admin.TabularInline):
-    model = ProductType
+class ProductAttrinbuteInline(admin.TabularInline):
+    model = Attribute
+    extra = 0
+
+
+class ProductLineAttributeValueInline(admin.TabularInline):
+    model = AttributeValue
     extra = 0
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    inlines = (ProductLineInline, ProductImageInline)
+    inlines = (ProductImageInline, ProductAttrinbuteInline)
     raw_id_fields = ('parent', 'category', 'brand', )
     prepopulated_fields = {'slug': ('product_name',)}
     list_editable =('is_publish',)
-    list_display = ('product_name','is_publish', 'category', 'brand')
+    list_display = ('product_name','is_publish', 'category', 'brand', 'has_attribute_products', 'attribute_count')
     list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
     list_per_page = 20    
 
 
 @admin.register(ProductLine)
 class ProductLineAdmin(admin.ModelAdmin):
-    inlines = (AttributeValueInline,)
+    inlines = (ProductLineAttributeValueInline,)
     list_display = ('price', 'is_publish', 'stock_quantity')
     list_editable = ('is_publish',)
     raw_id_fields =('product',)
@@ -47,19 +47,10 @@ class ProductLineAdmin(admin.ModelAdmin):
 
 @admin.register(ProductType)
 class ProductTypeAdmin(admin.ModelAdmin):
-    list_display = ('produt_type_title', 'types', 'is_publish', 'created_at', 'updated_at')
+    list_display = ('types', 'is_publish', 'created_at', 'updated_at')
     list_editable = ('is_publish',)
     list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
     list_per_page = 20
-
-@admin.register(ProductLineAttributeValue)
-class ProductLineAttributeValueAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(ProductTypeAttribute)
-class ProductTypeAttrbuteAdmin(admin.ModelAdmin):
-    pass
 
 
 @admin.register(Attribute)

@@ -9,9 +9,7 @@ class ProductLine(CreateModel, UpdateModel):
     sku = models.CharField(max_length=24, unique=True, blank=True, null=True)
     stock_quantity = models.PositiveIntegerField(default=0)
     is_publish = models.BooleanField(default=True)
-    attribute_value = models.ManyToManyField("AttributeValue", related_name="product_line_attribute_value", through='ProductLineAttributeValue')
     product = models.ForeignKey('Product', on_delete=models.PROTECT, related_name='product_line_products')
-    product_type = models.ForeignKey('ProductType', on_delete=models.PROTECT, related_name='product_types', blank=True)
 
     def __str__(self) -> str:
         return self.product.product_name
@@ -35,7 +33,15 @@ class Product(CreateModel, UpdateModel):
     is_publish = models.BooleanField(default=False)
     category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='product_categories')
     brand = models.ForeignKey('Category.BrandModel', on_delete=models.PROTECT, related_name='product_brand')
-    product_type = models.ForeignKey('ProductType', on_delete=models.PROTECT, related_name='product_product_type')
+    
+    
+    @property
+    def has_attribute_products(self):
+        return self.attribute_products.exists()
+    
+    @property
+    def attribute_count(self):
+        return self.attribute_products.count()
     
     def __str__(self) -> str:
         return self.product_name
@@ -45,7 +51,7 @@ class Product(CreateModel, UpdateModel):
 
 
 class ProductImage(CreateModel, UpdateModel):
-    image = models.ManyToManyField('images.Image', related_name="product_image_images")
+    image = models.ForeignKey('images.Image', on_delete=models.PROTECT, related_name="product_image_images")
     product = models.ForeignKey('Product', on_delete=models.PROTECT, related_name='product_image_products')
     
     class Meta:
@@ -53,11 +59,12 @@ class ProductImage(CreateModel, UpdateModel):
 
 
 class Attribute(CreateModel, UpdateModel):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True, db_index=True)
     description = models.TextField(blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='attribute_products')
     
     def __str__(self) -> str:
-        return self.name
+        return f'{self.name}'
     
     class Meta:
         db_table = 'attribute'
@@ -66,7 +73,9 @@ class Attribute(CreateModel, UpdateModel):
 class AttributeValue(CreateModel, UpdateModel):
     attribute_value = models.CharField(max_length=50)
     attribute = models.ForeignKey(Attribute, on_delete=models.PROTECT, related_name='attributes')
-
+    product_line = models.ForeignKey(ProductLine, on_delete=models.PROTECT, related_name='attribute_value_product_line')
+    product_type = models.ForeignKey('ProductType', on_delete=models.PROTECT, related_name='product_types', blank=True, null=True)
+    
     def __str__(self) -> str:
         return f'{self.attribute.name} -- {self.attribute_value}'
     
@@ -74,63 +83,19 @@ class AttributeValue(CreateModel, UpdateModel):
         db_table = 'attribute_value'
 
 
-# through tabel
-class ProductLineAttributeValue(CreateModel, UpdateModel):
-    attribute_value = models.ForeignKey(AttributeValue, on_delete=models.PROTECT, related_name='attribute_value_th')
-    product_line = models.ForeignKey(ProductLine, on_delete=models.PROTECT, related_name='product_line_th')
-    
-    def __str__(self) -> str:
-        return self.attribute_value.attribute_value
-    
-    class Meta:
-        db_table = 'attribute_value_through'
-        unique_together = ('product_line', 'attribute_value')
-
-
 class ProductType(CreateModel, UpdateModel):
     class TypeChoose(models.TextChoices):
         text = 'text'
         integer = 'integer'
         float = 'float'
-        dateetime = 'datetime'
+        datetime = 'datetime'
         date = 'date'
         charfield = 'charfield'
-        option = 'option'
-        multi_option = 'multi_option'
-    produt_type_title = models.CharField(max_length=50)
-    types = models.CharField(max_length=12, choices=TypeChoose.choices, default=TypeChoose.text)
-    attribute = models.ManyToManyField(Attribute, related_name='product_type_attribute', through='ProductTypeAttribute')
+    types = models.CharField(max_length=12, choices=TypeChoose.choices, default=TypeChoose.text, unique=True)
     is_publish = models.BooleanField(default=True)
 
     def __str__(self) -> str:
-        return self.attribute_title
+        return self.types
 
     class Meta:
         db_table = 'product_attribute'
-
-
-class ProductTypeAttribute(CreateModel, UpdateModel):
-    attribute = models.ForeignKey(Attribute, on_delete=models.PROTECT, related_name='product_type_attribute_value')
-    product_type = models.ForeignKey(ProductType, on_delete=models.PROTECT, related_name='product_type_product_types')
-    
-    class Meta:
-        unique_together = ('product_type', 'attribute')
-        db_table = 'product_type_attributes'
-
-
-# class ProductTypeAttribute(CreateModel, UpdateModel):
-#     product = models.ForeignKey(ProductLine, on_delete=models.PROTECT, related_name='products')
-#     product_type = models.ForeignKey(ProductType, on_delete=models.PROTECT, related_name='product_types')
-#     value_text = models.TextField(blank=True, null=True)
-#     value_char = models.CharField(max_length=60)
-#     value_integer = models.IntegerField(blank=True, null=True)
-#     value_float = models.FloatField(blank=True, null=True)
-#     value_datetime = models.DateTimeField(blank=True, null=True)
-#     value_date = models.DateField(blank=True, null=True)
-#     is_publish = models.BooleanField(default=True)
-
-#     def __str__(self) -> str:
-#         return self.product.product_name
-    
-#     class Meta:
-#         db_table = 'product_attribute_value'
