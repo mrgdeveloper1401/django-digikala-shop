@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Product, ProductLine, ProductType \
-    ,Attribute, AttributeValue, ProductImage
+    ,Attribute, AttributeValue, ProductImage, Option, OptionGroup
 from django_jalali.admin.filters import JDateFieldListFilter
 
 
@@ -38,7 +38,7 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(ProductLine)
 class ProductLineAdmin(admin.ModelAdmin):
     inlines = (ProductLineAttributeValueInline,)
-    list_display = ('price', 'is_publish', 'stock_quantity')
+    list_display = ('product', 'price', 'is_publish', 'stock_quantity')
     list_editable = ('is_publish',)
     raw_id_fields =('product',)
     list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
@@ -66,3 +66,19 @@ class AttributeValueAdmin(admin.ModelAdmin):
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Option)
+class OptionAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_publish', 'created_at', 'updated_at')
+    list_editable =('is_publish',)
+    list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
+    list_per_page = 20
+
+
+@admin.register(OptionGroup)
+class OptionGroupAdmin(admin.ModelAdmin):
+    list_display = ('title', 'option', 'is_publish', 'created_at', 'updated_at')
+    list_editable =('is_publish',)
+    list_filter = (('created_at', JDateFieldListFilter), ('updated_at', JDateFieldListFilter))
+    list_per_page = 20

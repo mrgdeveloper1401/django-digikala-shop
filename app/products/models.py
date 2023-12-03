@@ -3,6 +3,29 @@ from django.utils.translation import gettext_lazy as _
 from common.models import CreateModel, UpdateModel
 
 
+class Option(CreateModel, UpdateModel):
+    title = models.CharField(max_length=50,db_index=True)
+    is_publish = models.BooleanField(default=True)
+    
+    def __str__(self) -> str:
+        return self.title
+    
+    class Meta:
+        db_table = 'option'
+
+
+class OptionGroup(CreateModel, UpdateModel):
+    title = models.CharField(max_length=50,db_index=True)
+    option = models.ForeignKey(Option, on_delete=models.PROTECT, related_name='option_group_options')
+    is_publish = models.BooleanField(default=True)
+    
+    def __str__(self) -> str:
+        return self.title
+    
+    class Meta:
+        db_table = 'option_group'
+
+
 # product line model
 class ProductLine(CreateModel, UpdateModel):
     price = models.DecimalField(decimal_places=3, max_digits=12)
