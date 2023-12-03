@@ -2,30 +2,29 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from common.models import CreateModel, UpdateModel
 
-
-class ProductLineModel(CreateModel, UpdateModel):
+# product line model
+class ProductLine(CreateModel, UpdateModel):
     price = models.DecimalField(decimal_places=3, max_digits=12)
     sku = models.CharField(max_length=24, unique=True, blank=True, null=True)
-    product = models.ForeignKey('ProductModel', on_delete=models.PROTECT, related_name='product_lines', blank=True)
     stock_quantity = models.PositiveIntegerField(default=0)
     is_publish = models.BooleanField(default=True)
-    attribute_value = models.ManyToManyField("AttributeValue", related_name="product_line_attribute_value")
+    attribute_value = models.ManyToManyField("AttributeValue", related_name="product_line_attribute_value", through='ProductLineAttributeValue')
 
     def __str__(self) -> str:
         return self.product.product_name
     
-    @property
-    def has_attribute(self):
-        return self.product_lines.exists()
+    # @property
+    # def has_attribute(self):
+    #     return self.product_lines.exists()
     
-    @property
-    def attribute_count(self):
-        return self.product_lines.count()
+    # @property
+    # def attribute_count(self):
+    #     return self.product_lines.count()
 
     class Meta:
         db_table = 'product_line'
 
-
+# product model
 class Product(CreateModel, UpdateModel):
     class ProductStructre(models.TextChoices):
         standalone = 'standalone'
@@ -39,7 +38,8 @@ class Product(CreateModel, UpdateModel):
     is_publish = models.BooleanField(default=False)
     category = models.ForeignKey('Category.Category', on_delete=models.PROTECT, related_name='product_categories')
     brand = models.ForeignKey('Category.BrandModel', on_delete=models.PROTECT, related_name='product_brand')
-    image = models.ManyToManyField('ProductImage', related_name="product_images")
+    image = models.ManyToManyField('images.Image', related_name="product_images")
+    product_line = models.ForeignKey(ProductLine, on_delete=models.PROTECT, related_name='product_lines')
 
     def __str__(self) -> str:
         return self.product_name
@@ -61,7 +61,7 @@ class Attribute(CreateModel, UpdateModel):
 
 class AttributeValue(CreateModel, UpdateModel):
     attribute_value = models.CharField(max_length=50)
-    attrobute = models.ForeignKey(Attribute, on_delete=models.PROTECT, related_name='attributes')
+    attribute = models.ForeignKey(Attribute, on_delete=models.PROTECT, related_name='attributes')
 
     def __str__(self) -> str:
         return self.attribute_value
@@ -73,13 +73,14 @@ class AttributeValue(CreateModel, UpdateModel):
 # through tabel
 class ProductLineAttributeValue(CreateModel, UpdateModel):
     attribute_value = models.ForeignKey(AttributeValue, on_delete=models.PROTECT, related_name='attribute_value_th')
-    attribute = models.ForeignKey(Attribute, on_delete=models.PROTECT, related_name='attribute_th')
+    product_line = models.ForeignKey(ProductLine, on_delete=models.PROTECT, related_name='product_line_th')
     
     def __str__(self) -> str:
-        return f'{self.attribute} -- {self.attribute_value}'
+        return self.attribute_value.attribute_value
     
     class Meta:
         db_table = 'attribute_value_through'
+        unique_together = ('product_line', 'attribute_value')
 
 
 class ProductType(CreateModel, UpdateModel):
@@ -131,13 +132,3 @@ class ProductTypeAttrbute(CreateModel, UpdateModel):
     
 #     class Meta:
 #         db_table = 'product_attribute_value'
-        
-        
-class ProductImage(CreateModel, UpdateModel):
-    image = models.ForeignKey('images.ImagesModel', on_delete=models.PROTECT, related_name='product_image_images')
-    product_line = models.ForeignKey(ProductLineModel, on_delete=models.PROTECT, related_name='products_image_line')
-    display_order = models.PositiveSmallIntegerField(default=0)
-
-    class Meta:
-        unique_together = ('product_line', 'image')
-        db_table = 'product_images'
